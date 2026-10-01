@@ -15,7 +15,7 @@ export default function App() {
   const [rfqVisible, setRfqVisible] = useState(true);
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
-  const [activePersona, setActivePersona] = useState<Persona>('new-user');
+  const [activePersona, setActivePersona] = useState<Persona>('bl-waiting');
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   return (

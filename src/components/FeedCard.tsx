@@ -571,7 +571,7 @@ export default function FeedCard({ item }: FeedCardProps) {
       </div>
       ) : item.type === 'rfq_response' ? null : (item.type === 'rfq_attention' || item.type === 'rfq_single_view') ? (
       <div className="mx-4 mb-1 flex items-start gap-3">
-        <div className="flex-shrink-0 flex flex-col">
+        <div className="hidden lg:flex flex-shrink-0 flex-col">
           <img
             src={item.productImage}
             alt={item.productName}
