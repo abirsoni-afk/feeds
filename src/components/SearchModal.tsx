@@ -2005,7 +2005,7 @@ function ResultsCarousel({
 
         {/* Results feedback — mobile: thumbs open a bottom sheet with reason chips */}
         {list.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-3">
+          <div className="mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
               <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
                 {fbDone === 'up' ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
@@ -2126,7 +2126,7 @@ function ResultsCarousel({
 
         {/* Results feedback — desktop: thumbs open an inline dropdown anchored above them */}
         {list.length > 0 && (
-          <div ref={fbDesktopRef} className="relative mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-3">
+          <div ref={fbDesktopRef} className="relative mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
               <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
                 {fbDone === 'up' ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
