@@ -755,14 +755,23 @@ const [localOnly, setLocalOnly] = useState(false);
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setCityOpen(false)} />
                       <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-52 bg-white border border-slate-200 rounded-lg shadow-lg z-20 overflow-hidden text-left">
-                        <div className="p-2 border-b border-slate-100">
+                        <div className="p-2 border-b border-slate-100 flex items-center gap-1.5">
                           <input
                             type="text"
                             value={cityQuery}
                             onChange={e => setCityQuery(e.target.value)}
                             placeholder="Search city..."
-                            className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-teal-400 outline-none focus:ring-2 focus:ring-teal-100 placeholder-slate-400"
+                            className="flex-1 min-w-0 text-xs px-2.5 py-1.5 rounded-lg border border-teal-400 outline-none focus:ring-2 focus:ring-teal-100 placeholder-slate-400"
                           />
+                          <button
+                            type="button"
+                            onClick={() => setCityOpen(false)}
+                            aria-label="Close"
+                            title="Close"
+                            className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                         <div className="max-h-52 overflow-y-auto py-1">
                           {citySuggestions.map(c => (
@@ -814,14 +823,23 @@ const [localOnly, setLocalOnly] = useState(false);
                       <>
                         <div className="fixed inset-0 z-10" onClick={() => setCityOpen(false)} />
                         <div className="absolute left-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-lg shadow-lg z-20 overflow-hidden text-left">
-                          <div className="p-2 border-b border-slate-100">
+                          <div className="p-2 border-b border-slate-100 flex items-center gap-1.5">
                             <input
                               type="text"
                               value={cityQuery}
                               onChange={e => setCityQuery(e.target.value)}
                               placeholder="Search city..."
-                              className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-teal-400 outline-none focus:ring-2 focus:ring-teal-100 placeholder-slate-400"
+                              className="flex-1 min-w-0 text-xs px-2.5 py-1.5 rounded-lg border border-teal-400 outline-none focus:ring-2 focus:ring-teal-100 placeholder-slate-400"
                             />
+                            <button
+                              type="button"
+                              onClick={() => setCityOpen(false)}
+                              aria-label="Close"
+                              title="Close"
+                              className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
                           </div>
                           <div className="max-h-52 overflow-y-auto py-1">
                             {citySuggestions.map(c => (
@@ -1415,15 +1433,24 @@ function LocationRow({
         </button>
         {cityOpen && (
           <div className="absolute left-0 top-full mt-1.5 w-52 bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden">
-            <div className="p-2 border-b border-slate-100">
+            <div className="p-2 border-b border-slate-100 flex items-center gap-1.5">
               <input
                 ref={cityInputRef}
                 type="text"
                 value={cityQuery}
                 onChange={e => setCityQuery(e.target.value)}
                 placeholder="Search city..."
-                className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-teal-400 outline-none focus:ring-2 focus:ring-teal-100 placeholder-slate-400"
+                className="flex-1 min-w-0 text-xs px-2.5 py-1.5 rounded-lg border border-teal-400 outline-none focus:ring-2 focus:ring-teal-100 placeholder-slate-400"
               />
+              <button
+                type="button"
+                onClick={() => setCityOpen(false)}
+                aria-label="Close"
+                title="Close"
+                className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
             </div>
             <div className="max-h-52 overflow-y-auto py-1">
               {citySuggestions.map(c => (
@@ -2007,8 +2034,7 @@ function ResultsCarousel({
         {list.length > 0 && (
           <div className="mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
-              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
-                {fbDone === 'up' ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
+              <span className="text-xs font-semibold text-emerald-600">
                 Thanks for your feedback
               </span>
             ) : (
@@ -2128,8 +2154,7 @@ function ResultsCarousel({
         {list.length > 0 && (
           <div ref={fbDesktopRef} className="relative mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
-              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
-                {fbDone === 'up' ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
+              <span className="text-xs font-semibold text-emerald-600">
                 Thanks for your feedback
               </span>
             ) : (
