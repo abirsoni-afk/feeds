@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Phone, Plus, Send, Check, X, MapPin } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import SearchModal from './SearchModal';
@@ -134,6 +134,35 @@ function StoryViewer({ groups, groupIdx, storyIdx, onNext, onPrev, onClose }: St
   const [enquirySent, setEnquirySent] = useState(false);
   const [callRevealed, setCallRevealed] = useState(false);
 
+  // Instagram-style auto-progression — each story fills its segment over
+  // STORY_DURATION_MS and then advances on its own; holding a press on the
+  // image pauses the fill (and the advance) the same way it does there.
+  const STORY_DURATION_MS = 5000;
+  const PROGRESS_TICK_MS = 50;
+  const [progress, setProgress] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const onNextRef = useRef(onNext);
+  onNextRef.current = onNext;
+
+  useEffect(() => {
+    setProgress(0);
+  }, [story?.feedPostId]);
+
+  useEffect(() => {
+    if (paused || !story) return;
+    const interval = setInterval(() => {
+      setProgress(p => {
+        const next = p + (PROGRESS_TICK_MS / STORY_DURATION_MS) * 100;
+        if (next >= 100) {
+          onNextRef.current();
+          return 100;
+        }
+        return next;
+      });
+    }, PROGRESS_TICK_MS);
+    return () => clearInterval(interval);
+  }, [paused, story?.feedPostId]);
+
   if (!group || !story) return null;
 
   const locationLine = [story.cityName, story.stateName].filter(Boolean).join(', ');
@@ -147,11 +176,17 @@ function StoryViewer({ groups, groupIdx, storyIdx, onNext, onPrev, onClose }: St
       >
         {/* Progress segments — one per story in this seller's group */}
         <div className="absolute top-0 inset-x-0 z-20 flex gap-1 px-2 pt-2">
-          {group.stories.map((s, i) => (
-            <div key={s.feedPostId} className="h-[2.5px] flex-1 rounded-full bg-white/35 overflow-hidden">
-              <div className={`h-full bg-white transition-all ${i <= storyIdx ? 'w-full' : 'w-0'}`} />
-            </div>
-          ))}
+          {group.stories.map((s, i) => {
+            const fillPercent = i < storyIdx ? 100 : i === storyIdx ? progress : 0;
+            return (
+              <div key={s.feedPostId} className="h-[2.5px] flex-1 rounded-full bg-white/35 overflow-hidden">
+                <div
+                  className="h-full bg-white"
+                  style={{ width: `${fillPercent}%`, transition: i === storyIdx ? 'none' : 'width 150ms linear' }}
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* Header — seller link (real external URL), location + time, close */}
@@ -184,7 +219,14 @@ function StoryViewer({ groups, groupIdx, storyIdx, onNext, onPrev, onClose }: St
         </div>
 
         {/* Image + tap zones for prev/next */}
-        <div className="relative flex-1 min-h-0">
+        <div
+          className="relative flex-1 min-h-0"
+          onMouseDown={() => setPaused(true)}
+          onMouseUp={() => setPaused(false)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={() => setPaused(true)}
+          onTouchEnd={() => setPaused(false)}
+        >
           <img
             key={story.feedPostId}
             src={story.image1000}

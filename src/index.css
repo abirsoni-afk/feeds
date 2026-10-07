@@ -219,6 +219,11 @@
 }
 
 /* Advanced Search widget — ported from project 2's SearchModal */
+@keyframes story-progress-fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
 @keyframes filter-shake {
   0%, 100% { transform: translateX(0); }
   15% { transform: translateX(-5px); }
