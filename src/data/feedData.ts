@@ -61,7 +61,7 @@ export const sellers: Seller[] = [
     id: 's1',
     name: 'Rahul Jindal',
     company: 'Jindal Steel & Power Ltd.',
-    location: 'Hisar, Haryana',
+    location: 'Hisar',
     avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100',
     coverImage: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=400',
     categories: ['Steel', 'Iron', 'Metal Products', 'Construction Materials'],
@@ -259,7 +259,7 @@ export const feedItems: FeedItem[] = [
       {
         id: 'cs1',
         company: 'Jindal Steel & Power',
-        location: 'Hisar, Haryana',
+        location: 'Hisar',
         price: '₹55,000',
         priceUnit: 'per MT',
         hasGst: true,
@@ -270,7 +270,7 @@ export const feedItems: FeedItem[] = [
       {
         id: 'cs2',
         company: 'SW Steel India',
-        location: 'Mumbai, Maharashtra',
+        location: 'Mumbai',
         price: '₹53,200',
         priceUnit: 'per MT',
         hasGst: true,
@@ -281,7 +281,7 @@ export const feedItems: FeedItem[] = [
       {
         id: 'cs3',
         company: 'Tata Steel Ltd.',
-        location: 'Jamshedpur, Jharkhand',
+        location: 'Jamshedpur',
         price: '₹56,500',
         priceUnit: 'per MT',
         hasGst: true,
@@ -292,7 +292,7 @@ export const feedItems: FeedItem[] = [
       {
         id: 'cs4',
         company: 'Vizag Steel Works',
-        location: 'Visakhapatnam, AP',
+        location: 'Visakhapatnam',
         price: '₹54,800',
         priceUnit: 'per MT',
         hasGst: false,
