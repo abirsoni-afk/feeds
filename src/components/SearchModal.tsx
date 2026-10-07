@@ -2140,27 +2140,6 @@ function ResultsCarousel({
           </div>
         </div>
 
-        {/* Page dots — direct jump + visual page count */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-1.5 pt-3">
-            {Array.from({ length: totalPages }, (_, i) => i).map(i => (
-              <button
-                key={i}
-                onClick={() => setCarouselPage(i)}
-                aria-label={`Go to page ${i + 1}`}
-                aria-current={i === carouselPage}
-                className="p-1 -m-1"
-              >
-                <span
-                  className={`block rounded-full transition-all duration-200 ${
-                    i === carouselPage ? 'w-5 h-1.5 bg-teal-600' : 'w-1.5 h-1.5 bg-slate-300 hover:bg-slate-400'
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
-        )}
-
         {/* Results feedback — desktop: thumbs open an inline dropdown anchored above them */}
         {list.length > 0 && (
           <div ref={fbDesktopRef} className="relative mt-3 flex items-center justify-center gap-3">
