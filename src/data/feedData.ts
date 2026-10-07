@@ -237,7 +237,7 @@ export const feedItems: FeedItem[] = [
     timeAgo: '2 hours ago',
     content: '',
     productName: 'TMT Steel Bars Fe-500D',
-    productImage: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=600',
+    productImage: 'https://5.imimg.com/data5/SELLER/Default/2025/6/517555788/QW/BE/NG/141978447/fdgxfh-500x500.jpg',
     productCategory: 'Steel & Iron',
     price: '₹55,000',
     priceUnit: 'per MT',
