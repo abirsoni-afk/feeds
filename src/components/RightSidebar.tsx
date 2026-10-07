@@ -56,7 +56,7 @@ const mockCalls = [
 
 // Each row is 44px (py-2.5 = 20px + avatar 8px + 2×border = ~44px). 4 rows = 176px. View more = 28px.
 // Keep both views the same height to prevent layout shift.
-const MSG_LIST_HEIGHT = 176;
+const MSG_LIST_HEIGHT = 132;
 
 interface RightSidebarProps {
   persona?: Persona;
@@ -158,18 +158,12 @@ export default function RightSidebar({ persona }: RightSidebarProps) {
               </div>
             ) : (
             <div className="divide-y divide-gray-50">
-              {mockMessages.map((msg) => (
+              {mockMessages.slice(0, 3).map((msg) => (
                 <button
                   key={msg.id}
                   onClick={() => setActiveMessage(activeMessage === msg.id ? null : msg.id)}
                   className={`w-full flex items-start gap-2.5 py-2.5 hover:bg-gray-50 transition-colors text-left ${activeMessage === msg.id ? 'bg-[hsl(239,40%,92%)]' : ''}`}
                 >
-                  <div className="relative flex-shrink-0">
-                    <img src={msg.avatar} alt={msg.name} className="w-8 h-8 rounded-full object-cover" />
-                    {msg.online && (
-                      <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-400 border-2 border-white rounded-full" />
-                    )}
-                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <p className={`text-xs truncate ${msg.unread > 0 ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
