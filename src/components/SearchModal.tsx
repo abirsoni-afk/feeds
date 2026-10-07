@@ -654,12 +654,12 @@ const [localOnly, setLocalOnly] = useState(false);
         {(hasQuery || bestMatchId !== null) && (
         <div className="flex-shrink-0 flex flex-col gap-0 px-4 pt-2.5 border-b border-slate-200 bg-white">
           <div className="flex items-center gap-3 pb-2.5">
-            {bestMatchId !== null && (
+            {(bestMatchId !== null || hasQuery) && (
               <button
                 type="button"
-                onClick={topPicks.length > 0 ? handleBackToQuery : handleBackToSearch}
-                aria-label={topPicks.length > 0 ? 'Back to Search' : 'Back to Refine'}
-                title={topPicks.length > 0 ? 'Back to Search' : 'Back to Refine'}
+                onClick={bestMatchId === null ? handleBackToQuery : topPicks.length > 0 ? handleBackToQuery : handleBackToSearch}
+                aria-label={bestMatchId === null ? 'Back to Search' : topPicks.length > 0 ? 'Back to Search' : 'Back to Refine'}
+                title={bestMatchId === null ? 'Back to Search' : topPicks.length > 0 ? 'Back to Search' : 'Back to Refine'}
                 className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-teal-400 hover:bg-teal-50 hover:text-teal-700"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
