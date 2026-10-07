@@ -657,7 +657,7 @@ const [localOnly, setLocalOnly] = useState(false);
           !hasQuery && bestMatchId === null
             ? 'max-w-none md:max-w-[820px] md:h-auto'
             : topPicks.length > 0
-            ? 'max-w-none md:max-w-[1080px] md:h-auto md:max-h-[min(860px,calc(100vh-70px))]'
+            ? 'max-w-none md:max-w-[1080px] md:h-[min(860px,calc(100vh-70px))]'
             : 'max-w-none md:max-w-[1000px] md:h-[85vh] md:max-h-[min(860px,calc(100vh-70px))]'
         }`}
         onClick={e => e.stopPropagation()}
