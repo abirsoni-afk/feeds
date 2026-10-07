@@ -159,6 +159,17 @@ function highlightIcon(text: string) {
   return TrendingUp;
 }
 
+// "N buyers served in 6m" — below 5 is too thin a signal to show (blank line instead);
+// above 100 is capped and shown as "100+"; the unit is spelled out in full.
+function formatMatchHighlight(text: string): string | null {
+  const match = text.match(/^(\d+) buyers served in 6m$/);
+  if (!match) return text;
+  const count = parseInt(match[1], 10);
+  if (count < 5) return null;
+  if (count > 100) return '100+ buyers served in 6 months';
+  return `${count} buyers served in 6 months`;
+}
+
 // Maps SpecGroup[] (from the real ISQ specs API) into the same FilterSection
 // shape the left panel already knows how to render — so the whole pill/
 // quantity UI, activeFilters logic, and stale-results comparison all keep
@@ -2311,11 +2322,13 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
 
         {/* Why this seller — set apart from the metadata row above as a distinct reason chip */}
         {seller.matchHighlight && (() => {
+          const label = formatMatchHighlight(seller.matchHighlight);
+          if (!label) return null;
           const HighlightIcon = highlightIcon(seller.matchHighlight);
           return (
             <p className="inline-flex items-center gap-1 self-start text-[10px] font-medium mt-0.5 text-slate-600">
               <HighlightIcon className="w-2.5 h-2.5 flex-shrink-0" strokeWidth={2.5} />
-              {seller.matchHighlight}
+              {label}
             </p>
           );
         })()}
