@@ -4,7 +4,7 @@ import {
   ShieldCheck, ShieldQuestion, ChevronLeft, ChevronRight, Loader2, Check, User, Send,
   Phone, SearchX, Search, SlidersHorizontal, Trophy, Info, Clock, TrendingUp
 } from 'lucide-react';
-import FindingBestMatchLoader, { EVAL_STAGES } from './FindingBestMatchLoader';
+import FindingBestMatchLoader, { EVAL_STAGE_COUNT } from './FindingBestMatchLoader';
 import { fetchMcatId } from '../utils/mcat';
 import { fetchSpecs } from '../utils/specs';
 import {
@@ -482,6 +482,14 @@ const [localOnly, setLocalOnly] = useState(false);
     setShowNearby(false);
   }
 
+  // From the results screen, take the buyer all the way back to the
+  // "What are you looking for?" screen (not just back to refine/specs).
+  function handleBackToQuery() {
+    handleBackToSearch();
+    setSearchQuery('');
+    setSubmittedQuery('');
+  }
+
   // Real job-creation + polling flow: submits the buyer's actual keyword,
   // resolved mcat, city, quantity and selected specs to the windmill API,
   // then polls on a 5s/10s/20s... backoff (stopping on `completed: true`)
@@ -514,12 +522,12 @@ const [localOnly, setLocalOnly] = useState(false);
       .filter((s): s is SpecAnswer => s !== null);
 
     const LOADER_MS = 22200;
-    const STAGE_MS = LOADER_MS / EVAL_STAGES.length;
+    const STAGE_MS = LOADER_MS / EVAL_STAGE_COUNT;
     const loaderStart = Date.now();
     intervalRef.current = setInterval(() => {
       const elapsed = Date.now() - loaderStart;
       setProgress(Math.min(94, Math.round((elapsed / LOADER_MS) * 94)));
-      const stageIdx = Math.min(EVAL_STAGES.length - 1, Math.floor(elapsed / STAGE_MS));
+      const stageIdx = Math.min(EVAL_STAGE_COUNT - 1, Math.floor(elapsed / STAGE_MS));
       setEvalDone(Array.from({ length: stageIdx }, (_, i) => i));
       setEvalStage(stageIdx);
     }, 200);
@@ -587,7 +595,7 @@ const [localOnly, setLocalOnly] = useState(false);
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    setEvalDone(Array.from({ length: EVAL_STAGES.length }, (_, i) => i));
+    setEvalDone(Array.from({ length: EVAL_STAGE_COUNT }, (_, i) => i));
     setProgress(100);
 
     timerRef.current = setTimeout(() => {
@@ -649,9 +657,9 @@ const [localOnly, setLocalOnly] = useState(false);
             {bestMatchId !== null && (
               <button
                 type="button"
-                onClick={handleBackToSearch}
-                aria-label="Back to Search"
-                title="Back to Search"
+                onClick={topPicks.length > 0 ? handleBackToQuery : handleBackToSearch}
+                aria-label={topPicks.length > 0 ? 'Back to Search' : 'Back to Refine'}
+                title={topPicks.length > 0 ? 'Back to Search' : 'Back to Refine'}
                 className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-teal-400 hover:bg-teal-50 hover:text-teal-700"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
@@ -1401,7 +1409,6 @@ function LocationRow({
           className="flex items-center gap-1.5 bg-white border border-slate-200 hover:border-teal-400 text-slate-700 text-xs px-2.5 py-1 rounded-full transition-colors"
         >
           <MapPin className="w-3 h-3 text-teal-600" />
-          <span className="text-slate-400 font-normal">Near</span>
           <span className="font-medium">{selectedCity}</span>
           {cityOpen ? <ChevronUp className="w-3 h-3 text-slate-400" /> : <ChevronDown className="w-3 h-3 text-slate-400" />}
         </button>
@@ -1448,7 +1455,7 @@ function LocationRow({
           onChange={e => setLocalOnly(e.target.checked)}
           className="w-3.5 h-3.5 accent-teal-600 cursor-pointer"
         />
-        Only nearby sellers
+        Local only
       </label>
     </div>
   );

@@ -1,12 +1,21 @@
 import { Search, SlidersHorizontal, ShieldCheck, MapPin, Trophy, Check, Building2, Star, Award, Clock } from 'lucide-react';
 
-const EVAL_STAGES = [
-  'Finding relevant sellers',
-  'Matching your requirement',
-  'Verifying seller details',
-  'Finding sellers near you',
-  'Preparing your best matches',
-];
+// Stage copy is personalised live from what the buyer actually filled in —
+// their selected specs and city — so the loader reads as working on THEIR
+// requirement, not a generic spinner.
+function getEvalStages(specLabels: string[], locationName: string): string[] {
+  const hasSpecs = specLabels.length > 0 && specLabels[0] !== undefined;
+  const specCount = specLabels.length;
+  return [
+    'Scanning verified sellers for your requirement',
+    hasSpecs
+      ? `Matching ${specCount} of your selected ${specCount === 1 ? 'spec' : 'specs'}`
+      : 'Matching your requirement',
+    'Verifying GST, TrustSEAL & ratings',
+    `Finding sellers near ${locationName}`,
+    'Ranking your personalised best matches',
+  ];
+}
 
 const STAGE_ICONS = [Search, SlidersHorizontal, ShieldCheck, MapPin, Trophy];
 
@@ -280,7 +289,8 @@ function renderStageScene(idx: number, specLabels: string[], locationName: strin
   }
 }
 
-export { EVAL_STAGES, STAGE_ICONS };
+export { getEvalStages, STAGE_ICONS };
+export const EVAL_STAGE_COUNT = 5;
 
 export default function FindingBestMatchLoader({
   evalStage,
@@ -297,10 +307,11 @@ export default function FindingBestMatchLoader({
   locationName: string;
   activeFilters: string[];
 }) {
-  const activeIdx = evalStage >= 0 && evalStage < EVAL_STAGES.length ? evalStage : EVAL_STAGES.length - 1;
-  const allDone = evalDone.length >= EVAL_STAGES.length;
+  const stages = getEvalStages(specLabels, locationName);
+  const activeIdx = evalStage >= 0 && evalStage < stages.length ? evalStage : stages.length - 1;
+  const allDone = evalDone.length >= stages.length;
   const ActiveIcon = STAGE_ICONS[activeIdx];
-  const stageLabel = allDone ? 'Finishing up…' : `${EVAL_STAGES[activeIdx]}…`;
+  const stageLabel = allDone ? 'Finalising your personalised matches…' : `${stages[activeIdx]}…`;
 
   return (
     <div className="absolute inset-0 z-30 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 px-4 overflow-hidden bg-white">
@@ -314,7 +325,6 @@ export default function FindingBestMatchLoader({
       <div className="absolute top-0 inset-x-0 z-20 px-4 pt-3">
         <div className="md:hidden flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 text-xs px-2.5 py-1 rounded-full w-fit">
           <MapPin className="w-3 h-3 text-teal-600 flex-shrink-0" />
-          <span className="text-slate-400 font-normal">Near</span>
           <span className="font-medium">{locationName}</span>
         </div>
         {activeFilters.length > 0 && (
