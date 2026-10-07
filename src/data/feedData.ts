@@ -400,6 +400,8 @@ export const feedItems: FeedItem[] = [
       'https://5.imimg.com/data5/SELLER/Default/2025/3/497190109/OP/YB/SA/27771252/15kva-three-phase-cpcb-iv-generator-500x500.jpeg',
     ],
     productCategory: 'Generators & Gensets',
+    price: '₹2,70,000',
+    priceUnit: 'per unit',
     tags: ['Generator', 'CPCB IV+', 'Diesel Genset', 'Power Equipment'],
     likes: 28,
     enquiries: 19,
