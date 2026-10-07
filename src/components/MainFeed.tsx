@@ -85,12 +85,7 @@ export default function MainFeed({ activeFilter, persona }: MainFeedProps) {
       </div>
 
       {/* Feed items */}
-      {displayItems.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-md p-10 text-center">
-          <p className="text-gray-500 text-sm">No activity in this feed yet.</p>
-          <p className="text-xs text-gray-400 mt-1">Add more favourite sellers or post new RFQs to see activity here.</p>
-        </div>
-      ) : (
+      {displayItems.length === 0 ? null : (
         <div className="space-y-3">
           {grouped ? (
             // For 'all' feed, show section dividers
