@@ -103,6 +103,10 @@ export function parseTopFoldStories(response: FeedListingResponse): TopFoldStory
 
   for (const post of ordered) {
     const story = toStory(post);
+    // No detected product/category name — nothing meaningful to show as the
+    // overlay, so skip this post entirely rather than render a blank story.
+    if (!story.overlayText) continue;
+
     const existingIdx = groupIndexBySeller.get(story.sellerId);
     if (existingIdx !== undefined) {
       groups[existingIdx].stories.push(story);
