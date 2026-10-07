@@ -16,14 +16,30 @@ interface MainFeedProps {
 
 // New users have no BL / order / RFQ / favourite-seller history yet
 function applyPersonaFilter(persona: Persona | undefined, items: FeedItem[]): FeedItem[] {
-  if (persona !== 'new-user') return items;
-  return items.filter(
-    (i) =>
-      i.feedSection !== 'active-orders' &&
-      i.feedSection !== 'favourite' &&
-      i.feedSection !== 'my-categories' &&
-      i.type !== 'favourite_seller'
-  );
+  if (persona === 'new-user') {
+    return items.filter(
+      (i) =>
+        i.feedSection !== 'active-orders' &&
+        i.feedSection !== 'favourite' &&
+        i.feedSection !== 'my-categories' &&
+        i.type !== 'favourite_seller'
+    );
+  }
+
+  // Active-orders cards are stacked progress states of the SAME buy lead
+  // (submitted -> approved -> sellers connected), so only one should show
+  // at a time depending on where this persona's BL currently stands.
+  if (persona === 'bl-waiting') {
+    return items.filter((i) => i.type !== 'bl_live' && i.type !== 'rfq_attention' && i.type !== 'rfq_single_view');
+  }
+  if (persona === 'bl-approved-zero') {
+    return items.filter((i) => i.type !== 'bl_pending' && i.type !== 'rfq_attention' && i.type !== 'rfq_single_view');
+  }
+  if (persona === 'bl-approved-sellers') {
+    return items.filter((i) => i.type !== 'bl_pending' && i.type !== 'bl_live' && i.type !== 'rfq_single_view');
+  }
+
+  return items;
 }
 
 function getFilteredItems(filter: FeedFilter, items: FeedItem[]): FeedItem[] {
