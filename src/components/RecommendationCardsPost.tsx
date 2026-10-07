@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Heart, Phone } from 'lucide-react';
 import LocationTrustTicker from './LocationTrustTicker';
 
-interface RecommendedProduct {
+export interface RecommendedProduct {
   id: string;
   name: string;
   company: string;
@@ -72,7 +72,7 @@ export const recommendedProducts: RecommendedProduct[] = [
 ];
 
 
-function RecommendedProductPost({ product }: { product: RecommendedProduct }) {
+export function RecommendedProductPost({ product, hideImageBorder }: { product: RecommendedProduct; hideImageBorder?: boolean }) {
   const [favourited, setFavourited] = useState(false);
   const [enquirySent, setEnquirySent] = useState(false);
 
@@ -109,7 +109,7 @@ function RecommendedProductPost({ product }: { product: RecommendedProduct }) {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover rounded-lg border border-[hsl(220,10%,88%)] block"
+            className={`w-full h-full object-cover rounded-lg block ${hideImageBorder ? '' : 'border border-[hsl(220,10%,88%)]'}`}
           />
         </div>
       </div>
