@@ -657,8 +657,8 @@ const [localOnly, setLocalOnly] = useState(false);
           !hasQuery && bestMatchId === null
             ? 'max-w-none md:max-w-[820px] md:h-auto'
             : topPicks.length > 0
-            ? 'max-w-none md:max-w-[1080px] md:h-auto md:max-h-[860px]'
-            : 'max-w-none md:max-w-[1000px] md:h-[85vh] md:max-h-[860px]'
+            ? 'max-w-none md:max-w-[1080px] md:h-auto md:max-h-[min(860px,calc(100vh-70px))]'
+            : 'max-w-none md:max-w-[1000px] md:h-[85vh] md:max-h-[min(860px,calc(100vh-70px))]'
         }`}
         onClick={e => e.stopPropagation()}
       >
@@ -743,7 +743,7 @@ const [localOnly, setLocalOnly] = useState(false);
         )}
 
         {/* ── Body ── */}
-        <div className="flex flex-1 min-h-0 overflow-hidden relative" style={{ minHeight: topPicks.length > 0 ? 'auto' : undefined }}>
+        <div className="flex flex-1 min-h-0 overflow-hidden relative">
           {!hasQuery && bestMatchId === null ? (
             <div className="flex-1 flex flex-col overflow-y-auto px-6 py-8">
               <div className="relative flex items-center justify-between mb-4">
