@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import {
   X, MapPin, ChevronDown, ChevronUp, Heart, Star, Sparkles, ArrowLeft,
   ShieldCheck, ShieldQuestion, ChevronLeft, ChevronRight, Loader2, Check, User, Send,
-  Phone, SearchX, Search, SlidersHorizontal, Trophy, Info, Clock, TrendingUp
+  Phone, SearchX, Search, SlidersHorizontal, Trophy, Info, Clock, TrendingUp,
+  ThumbsUp, ThumbsDown,
 } from 'lucide-react';
 import FindingBestMatchLoader, { EVAL_STAGE_COUNT } from './FindingBestMatchLoader';
 import { fetchMcatId } from '../utils/mcat';
@@ -1665,6 +1666,28 @@ interface ResultsCarouselProps {
 
 const CARDS_PER_PAGE = 4;
 
+// Results feedback ("Are these results useful?") — thumbs-up/down with optional
+// one-tap reason chips, captured per tab (Top Picks / Nearby Sellers).
+type FeedbackVote = 'up' | 'down';
+const FEEDBACK_REASONS: Record<FeedbackVote, [string, string][]> = {
+  up: [
+    ['nearby', 'Nearby Sellers'],
+    ['good_price', 'Good Price'],
+    ['availability', 'Product Availability'],
+    ['price_qty_match', 'Price & Quantity Matched'],
+  ],
+  down: [
+    ['too_far', 'Located too far'],
+    ['high_price', 'High price'],
+    ['not_found', 'Product not found'],
+    ['no_response', 'No response'],
+  ],
+};
+const FEEDBACK_QUESTION: Record<FeedbackVote, string> = {
+  up: 'Tell us what worked',
+  down: 'What went wrong?',
+};
+
 function ResultsCarousel({
   topPicks, nearbySellers, showNearby, setShowNearby,
   bestMatchId, priceRequestedIds, setPriceRequestedIds,
@@ -1682,6 +1705,124 @@ function ResultsCarousel({
 
   // Reset to first page when switching tabs
   useEffect(() => { setCarouselPage(0); }, [showNearby]);
+
+  // Results feedback — vote is captured per tab (Top Picks / Nearby Sellers); reasons are
+  // optional enrichment collected right after the vote (desktop: inline dropdown above the
+  // thumbs; mobile: bottom sheet).
+  const fbKey: 'top' | 'near' = showNearby ? 'near' : 'top';
+  const [fbVote, setFbVote] = useState<Record<'top' | 'near', FeedbackVote | null>>({ top: null, near: null });
+  const [fbStep, setFbStep] = useState<FeedbackVote | null>(null);
+  const [fbPicked, setFbPicked] = useState<Set<string>>(new Set());
+  const [fbNote, setFbNote] = useState('');
+  const [fbSheetOpen, setFbSheetOpen] = useState(false);
+  const [fbSheetVote, setFbSheetVote] = useState<FeedbackVote | null>(null);
+  const fbDone = fbVote[fbKey];
+
+  function logFeedback(vote: FeedbackVote, extra: Record<string, unknown> = {}) {
+    // Stand-in for the real tracking call.
+    console.log('[feedback]', {
+      vote,
+      list: showNearby ? 'nearby' : 'top_picks',
+      sellers: list.map(s => s.id),
+      ...extra,
+      ts: Date.now(),
+    });
+  }
+
+  function toggleFbReason(key: string) {
+    setFbPicked(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  }
+
+  function castFeedbackVote(vote: FeedbackVote) {
+    setFbPicked(new Set());
+    setFbNote('');
+    logFeedback(vote, { stage: 'vote' });
+  }
+
+  function finishFeedback(vote: FeedbackVote | null, withReasons: boolean) {
+    if (!vote) return;
+    if (withReasons) logFeedback(vote, { stage: 'reasons', reasons: Array.from(fbPicked), comment: fbNote.trim() });
+    setFbVote(prev => ({ ...prev, [fbKey]: vote }));
+    setFbStep(null);
+    setFbSheetOpen(false);
+    setFbPicked(new Set());
+    setFbNote('');
+  }
+
+  function handleDesktopThumb(vote: FeedbackVote) {
+    if (fbStep === vote) return;
+    castFeedbackVote(vote);
+    setFbStep(vote);
+  }
+
+  function handleMobileThumb(vote: FeedbackVote) {
+    castFeedbackVote(vote);
+    setFbSheetVote(vote);
+    setFbSheetOpen(true);
+  }
+
+  // Desktop: clicking anywhere outside the open reasons dropdown closes it but keeps the vote
+  // already cast (reasons are optional enrichment, not a requirement to register feedback).
+  const fbDesktopRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!fbStep) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (fbDesktopRef.current && fbDesktopRef.current.contains(e.target as Node)) return;
+      finishFeedback(fbStep, false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fbStep]);
+
+  function renderFeedbackReasons(vote: FeedbackVote, variant: 'desktop' | 'mobile') {
+    const canSubmit = fbPicked.size > 0 || fbNote.trim().length > 0;
+    return (
+      <>
+        <div className={`flex flex-wrap gap-2 ${variant === 'mobile' ? 'mt-3' : 'pt-1'}`}>
+          {FEEDBACK_REASONS[vote].map(([key, label]) => {
+            const active = fbPicked.has(key);
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => toggleFbReason(key)}
+                aria-pressed={active}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
+                  active
+                    ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold'
+                    : 'border-slate-200 text-slate-600 bg-white hover:border-slate-300'
+                }`}
+              >
+                {active && <Check className="w-3 h-3" />}
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        <textarea
+          value={fbNote}
+          onChange={e => setFbNote(e.target.value)}
+          maxLength={300}
+          rows={variant === 'mobile' ? 3 : 2}
+          placeholder="Share your feedback"
+          className="mt-2.5 w-full rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-teal-500 resize-none"
+        />
+        <button
+          type="button"
+          disabled={!canSubmit}
+          onClick={() => finishFeedback(vote, true)}
+          className="mt-2.5 w-full h-9 rounded-lg text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-default transition-colors"
+        >
+          Submit
+        </button>
+      </>
+    );
+  }
 
   function ribbonFor(idx: number): { ribbon?: string; ribbonTone: 'amber' | 'teal' | 'slate' } {
     if (showNearby) {
@@ -1861,6 +2002,61 @@ function ResultsCarousel({
             );
           })}
         </div>
+
+        {/* Results feedback — mobile: thumbs open a bottom sheet with reason chips */}
+        {list.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-3">
+            {fbDone ? (
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                {fbDone === 'up' ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
+                Thanks for your feedback
+              </span>
+            ) : (
+              <>
+                <span className="text-xs font-semibold text-slate-600">Are these results useful?</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label="Yes, useful"
+                    onClick={() => handleMobileThumb('up')}
+                    className="flex h-8 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:border-teal-400 hover:text-teal-600"
+                  >
+                    <ThumbsUp className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Not useful"
+                    onClick={() => handleMobileThumb('down')}
+                    className="flex h-8 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:border-teal-400 hover:text-teal-600"
+                  >
+                    <ThumbsDown className="w-4 h-4" />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Mobile bottom sheet — reasons after a vote; dismissing without submitting keeps the vote */}
+        {fbSheetOpen && fbSheetVote && (
+          <div className="fixed inset-0 z-[10000]">
+            <div className="absolute inset-0 bg-black/40" onClick={() => finishFeedback(fbSheetVote, false)} />
+            <div className="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-2xl p-4 pb-[calc(16px+env(safe-area-inset-bottom))]">
+              <div className="flex items-start justify-between gap-3 mb-1">
+                <p className="text-sm font-bold text-slate-900">{FEEDBACK_QUESTION[fbSheetVote]}</p>
+                <button
+                  type="button"
+                  aria-label="Close"
+                  onClick={() => finishFeedback(fbSheetVote, false)}
+                  className="p-1 -m-1 rounded-full hover:bg-slate-100 text-slate-400"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              {renderFeedbackReasons(fbSheetVote, 'mobile')}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Desktop — 4 cards per page, with edge-overlay nav arrows on whichever side has more */}
@@ -1925,6 +2121,63 @@ function ResultsCarousel({
                 />
               </button>
             ))}
+          </div>
+        )}
+
+        {/* Results feedback — desktop: thumbs open an inline dropdown anchored above them */}
+        {list.length > 0 && (
+          <div ref={fbDesktopRef} className="relative mt-3 pt-3 border-t border-slate-100 flex items-center justify-center gap-3">
+            {fbDone ? (
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                {fbDone === 'up' ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
+                Thanks for your feedback
+              </span>
+            ) : (
+              <>
+                <span className="text-xs font-semibold text-slate-600">Are these results useful?</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label="Useful"
+                    aria-expanded={fbStep === 'up'}
+                    onClick={() => handleDesktopThumb('up')}
+                    className={`flex h-8 w-9 items-center justify-center rounded-lg border transition-colors ${
+                      fbStep === 'up' ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-200 bg-white text-slate-500 hover:border-teal-400 hover:text-teal-600'
+                    }`}
+                  >
+                    <ThumbsUp className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Not useful"
+                    aria-expanded={fbStep === 'down'}
+                    onClick={() => handleDesktopThumb('down')}
+                    className={`flex h-8 w-9 items-center justify-center rounded-lg border transition-colors ${
+                      fbStep === 'down' ? 'border-slate-600 bg-slate-600 text-white' : 'border-slate-200 bg-white text-slate-500 hover:border-teal-400 hover:text-teal-600'
+                    }`}
+                  >
+                    <ThumbsDown className="w-4 h-4" />
+                  </button>
+                </div>
+              </>
+            )}
+
+            {fbStep && (
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl p-3 text-left z-20">
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <p className="text-xs font-semibold text-slate-700">{FEEDBACK_QUESTION[fbStep]}</p>
+                  <button
+                    type="button"
+                    aria-label="Close"
+                    onClick={() => finishFeedback(fbStep, false)}
+                    className="p-1 -m-1 rounded-full hover:bg-slate-100 text-slate-400"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                {renderFeedbackReasons(fbStep, 'desktop')}
+              </div>
+            )}
           </div>
         )}
       </div>
