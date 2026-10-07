@@ -27,7 +27,7 @@ export default function App() {
 
       {/* Page body below fixed nav — single scrollable surface */}
       <div className="pt-[103px] md:pt-[55px] h-screen overflow-y-auto scrollbar-thin pb-16 lg:pb-0">
-        <MobileProfileBar />
+        <MobileProfileBar persona={activePersona} />
         <div className="max-w-screen-xl mx-auto px-4">
           <div className="flex gap-4 items-start">
             {/* Column 1 — sticky on desktop, drawer on mobile */}

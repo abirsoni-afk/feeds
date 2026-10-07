@@ -77,8 +77,9 @@ export default function MainFeed({ activeFilter, persona }: MainFeedProps) {
       <div className="hidden lg:block space-y-3">
         <CtaPanel variant="desktop" />
         {/* B2B stories rail — trending categories, new sellers, price drops; msite gets its own
-            copy right below MobileProfileBar's CTA bar instead */}
-        <StoriesRow />
+            copy right below MobileProfileBar's CTA bar instead. Hidden for the bl-waiting persona
+            temporarily, per request. */}
+        {persona !== 'bl-waiting' && <StoriesRow />}
       </div>
 
       {/* Feed items */}
