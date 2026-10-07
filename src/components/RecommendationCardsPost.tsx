@@ -16,6 +16,7 @@ interface RecommendedProduct {
   timeAgo: string;
   avatar: string;
   category: string;
+  askPrice?: boolean;
 }
 
 export const recommendedProducts: RecommendedProduct[] = [
@@ -33,6 +34,7 @@ export const recommendedProducts: RecommendedProduct[] = [
     timeAgo: '2 hours ago',
     avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=100',
     category: 'Generators & Gensets',
+    askPrice: true,
   },
   {
     id: 'r3',
@@ -132,20 +134,32 @@ function RecommendedProductPost({ product }: { product: RecommendedProduct }) {
           </div>
         </div>
 
-        <p className="mt-0 text-sm font-bold text-gray-900">
-          {product.price}
-          <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
-        </p>
+        {product.askPrice ? (
+          <button className="mt-0 text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
+            Ask Price
+          </button>
+        ) : (
+          <p className="mt-0 text-sm font-bold text-gray-900">
+            {product.price}
+            <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
+          </p>
+        )}
       </div>
 
       {/* Mobile (msite) only: original plain stacked layout — unaffected by the grey-box styling */}
       <div className="lg:hidden px-4 pt-1.5 pb-3">
         <p className="text-sm leading-snug text-gray-900 font-semibold tracking-tight line-clamp-2">{product.name}</p>
 
-        <p className="mt-1 text-sm font-bold text-gray-900">
-          {product.price}
-          <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
-        </p>
+        {product.askPrice ? (
+          <button className="mt-1 text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline">
+            Ask Price
+          </button>
+        ) : (
+          <p className="mt-1 text-sm font-bold text-gray-900">
+            {product.price}
+            <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
+          </p>
+        )}
 
         <div className="mt-2 flex items-center gap-2">
           <button
