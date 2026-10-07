@@ -56,7 +56,7 @@ const mockCalls = [
 
 // Each row is 44px (py-2.5 = 20px + avatar 8px + 2×border = ~44px). 4 rows = 176px. View more = 28px.
 // Keep both views the same height to prevent layout shift.
-const MSG_LIST_HEIGHT = 132;
+const MSG_LIST_HEIGHT = 165;
 
 interface RightSidebarProps {
   persona?: Persona;
