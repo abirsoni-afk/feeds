@@ -4,6 +4,7 @@ import CategorySuggestionsCard from './CategorySuggestionsCard';
 import RecommendationCardsPost from './RecommendationCardsPost';
 import CtaPanel from './CtaPanel';
 import StoriesRow from './StoriesRow';
+import StoryFeedCards from './StoryFeedCards';
 import { FeedFilter, feedItems, FeedItem } from '../data/feedData';
 import { Persona } from './PersonaFloater';
 
@@ -77,8 +78,10 @@ export default function MainFeed({ activeFilter, persona }: MainFeedProps) {
       <div className="hidden lg:block space-y-3">
         <CtaPanel variant="desktop" />
         {/* B2B stories rail — trending categories, new sellers, price drops; msite gets its own
-            copy right below MobileProfileBar's CTA bar instead. */}
-        <StoriesRow />
+            copy right below MobileProfileBar's CTA bar instead. New users have no activity to
+            personalise a feed from, so they see the same seller-post data as ordinary post cards
+            instead of the stories rail. */}
+        {persona === 'new-user' ? <StoryFeedCards /> : <StoriesRow />}
       </div>
 
       {/* Feed items */}
