@@ -1909,7 +1909,7 @@ interface FinalResultCardProps {
   ribbonTone?: 'amber' | 'teal' | 'slate';
 }
 
-function FinalResultCard({ seller, isBestMatch, priceRequested, onAskPrice, ribbon, ribbonTone = 'teal' }: FinalResultCardProps) {
+function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTone = 'teal' }: FinalResultCardProps) {
   const [ctaStage, setCtaStage] = useState<CtaStage>('idle');
   const [callRevealed, setCallRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -2003,9 +2003,7 @@ function FinalResultCard({ seller, isBestMatch, priceRequested, onAskPrice, ribb
         {seller.matchHighlight && (() => {
           const HighlightIcon = highlightIcon(seller.matchHighlight);
           return (
-            <p className={`inline-flex items-center gap-1 self-start text-[10px] font-medium mt-0.5 ${
-              isBestMatch ? 'text-teal-700' : 'text-slate-600'
-            }`}>
+            <p className="inline-flex items-center gap-1 self-start text-[10px] font-medium mt-0.5 text-slate-600">
               <HighlightIcon className="w-2.5 h-2.5 flex-shrink-0" strokeWidth={2.5} />
               {seller.matchHighlight}
             </p>
