@@ -17,6 +17,7 @@ interface RecommendedProduct {
   avatar: string;
   category: string;
   askPrice?: boolean;
+  hideUnit?: boolean;
 }
 
 export const recommendedProducts: RecommendedProduct[] = [
@@ -42,6 +43,7 @@ export const recommendedProducts: RecommendedProduct[] = [
     company: 'X.Press Genearator Service',
     location: 'Noida',
     price: '₹1,00,000',
+    hideUnit: true,
     rating: 4.1,
     reviewCount: 8,
     image: 'https://5.imimg.com/data5/SELLER/Default/2024/12/477121359/VN/GQ/IJ/84552369/baudouin-diesel-generator-250x250.webp',
@@ -57,6 +59,7 @@ export const recommendedProducts: RecommendedProduct[] = [
     company: 'Integrated Genset (India) Pvt. Ltd.',
     location: 'Noida',
     price: '₹4,95,000',
+    hideUnit: true,
     rating: 4.1,
     reviewCount: 20,
     image: 'https://5.imimg.com/data5/SELLER/Default/2023/4/302986471/BS/HF/PB/2244884/125-kva-koel-green-diesel-generator-500x500.jpeg',
@@ -141,7 +144,9 @@ function RecommendedProductPost({ product }: { product: RecommendedProduct }) {
         ) : (
           <p className="mt-0 text-sm font-bold text-gray-900">
             {product.price}
-            <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
+            {!product.hideUnit && (
+              <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
+            )}
           </p>
         )}
       </div>
@@ -157,7 +162,9 @@ function RecommendedProductPost({ product }: { product: RecommendedProduct }) {
         ) : (
           <p className="mt-1 text-sm font-bold text-gray-900">
             {product.price}
-            <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
+            {!product.hideUnit && (
+              <span className="text-[11px] font-normal text-gray-500 ml-0.5">per kg</span>
+            )}
           </p>
         )}
 
