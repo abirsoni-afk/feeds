@@ -1484,8 +1484,31 @@ function SpecFilterList({
   activeFilters, toggleFilter, quantityValue, setQuantityValue,
   quantityUnit, setQuantityUnit, quantityUnits, filterShake = false,
 }: SpecFilterListProps) {
+  // Nudges the buyer that more filters sit below the fold — only shown while
+  // there's actually unscrolled content left, and fades out once they reach the bottom.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [hasMoreBelow, setHasMoreBelow] = useState(false);
+
+  const updateScrollNudge = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setHasMoreBelow(el.scrollHeight - el.scrollTop - el.clientHeight > 12);
+  };
+
+  useEffect(() => {
+    updateScrollNudge();
+    const el = scrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(updateScrollNudge);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [specSections, openGroups, specsLoading]);
+
   return (
+    <div className="relative flex-1 min-h-0 flex flex-col">
     <div
+      ref={scrollRef}
+      onScroll={updateScrollNudge}
       className={`flex-1 overflow-y-auto px-3 py-2 space-y-0 ${filterShake ? 'animate-filter-shake' : ''}`}
       style={filterShake ? { animationFillMode: 'both' } : undefined}
     >
@@ -1595,6 +1618,15 @@ function SpecFilterList({
           </div>
         );
       })}
+    </div>
+    {hasMoreBelow && (
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 flex flex-col items-center">
+        <div className="w-full h-8 bg-gradient-to-t from-white md:from-[#fafafa] to-transparent" />
+        <div className="relative -mt-5 mb-1.5 flex items-center justify-center w-6 h-6 rounded-full bg-white border border-slate-200 shadow-sm animate-bounce">
+          <ChevronDown className="w-3.5 h-3.5 text-teal-600" />
+        </div>
+      </div>
+    )}
     </div>
   );
 }
