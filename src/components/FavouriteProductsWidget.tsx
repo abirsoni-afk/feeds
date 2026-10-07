@@ -17,7 +17,7 @@ const products: FavProduct[] = [
     image: 'https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=400',
     price: '₹42,000',
     seller: 'Rajendra Enterprises',
-    location: 'Dharamsala, HP',
+    location: 'Dharamsala',
   },
   {
     id: 'fp2',
@@ -25,7 +25,7 @@ const products: FavProduct[] = [
     image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=400',
     price: null,
     seller: 'Lekhraj Enterprises',
-    location: 'Raipur, CG',
+    location: 'Raipur',
   },
   {
     id: 'fp3',
@@ -33,7 +33,7 @@ const products: FavProduct[] = [
     image: 'https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg?auto=compress&cs=tinysrgb&w=400',
     price: '₹280',
     seller: 'TechVision Electronics',
-    location: 'Noida, UP',
+    location: 'Noida',
   },
   {
     id: 'fp4',
@@ -41,7 +41,7 @@ const products: FavProduct[] = [
     image: 'https://images.pexels.com/photos/3735184/pexels-photo-3735184.jpeg?auto=compress&cs=tinysrgb&w=400',
     price: null,
     seller: 'Delhi Textile Hub',
-    location: 'Delhi, NCR',
+    location: 'Delhi',
   },
   {
     id: 'fp5',
@@ -49,7 +49,7 @@ const products: FavProduct[] = [
     image: 'https://images.pexels.com/photos/4481259/pexels-photo-4481259.jpeg?auto=compress&cs=tinysrgb&w=400',
     price: '₹92,000',
     seller: 'GLK India Pvt Ltd',
-    location: 'Surat, Gujarat',
+    location: 'Surat',
   },
 ];
 
