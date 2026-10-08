@@ -726,15 +726,15 @@ const [localOnly, setLocalOnly] = useState(false);
         {/* Stale-results strip — specs changed since this match ran. Msite shows this inline in the
             curated body instead (after the spec chips), so it doesn't compete with the header. */}
         {resultsAreStale && !isFinding && (
-          <div className="hidden md:flex flex-shrink-0 items-center gap-2 px-4 py-1 bg-amber-50 border-b border-amber-100">
-            <span className="flex items-center gap-1 text-xs font-medium text-amber-800 min-w-0">
-              <Info className="w-3 h-3 flex-shrink-0" />
-              <span className="truncate">Requirement updated</span>
+          <div className="hidden md:flex flex-shrink-0 items-center gap-3 px-4 py-1.5 bg-amber-50 border-b border-amber-100">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-amber-800 min-w-0">
+              <Info className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">See sellers matching your updated requirement</span>
             </span>
             <button
               type="button"
               onClick={handleFindBestMatch}
-              className="flex-shrink-0 flex items-center gap-1 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-0.5 shadow-sm transition-colors"
+              className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3.5 py-1.5 shadow-sm transition-colors"
             >
               <Sparkles className="w-3 h-3" />
               Find Best Match
