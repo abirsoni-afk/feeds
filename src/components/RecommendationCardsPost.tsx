@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Heart, Phone } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import LocationTrustTicker from './LocationTrustTicker';
+import CallNowButton from './CallNowButton';
 
 export interface RecommendedProduct {
   id: string;
@@ -130,10 +131,7 @@ export function RecommendedProductPost({ product, hideImageBorder }: { product: 
             >
               {enquirySent ? 'Enquiry Sent!' : 'Get Best Price'}
             </button>
-            <button className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap border border-[#1d8480] text-[#1d8480] bg-white hover:bg-teal-50 transition-all active:scale-95">
-              <Phone className="w-3.5 h-3.5" />
-              Call Now
-            </button>
+            <CallNowButton variant="desktop" />
           </div>
         </div>
 
@@ -179,10 +177,7 @@ export function RecommendedProductPost({ product, hideImageBorder }: { product: 
           >
             {enquirySent ? 'Enquiry Sent!' : 'Get Best Price'}
           </button>
-          <button className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold border border-[#1d8480] text-[#1d8480] hover:bg-teal-50 transition-all active:scale-95">
-            <Phone className="w-3.5 h-3.5" />
-            Call Now
-          </button>
+          <CallNowButton variant="mobile" />
         </div>
       </div>
     </article>

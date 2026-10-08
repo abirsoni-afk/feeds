@@ -4,11 +4,12 @@ import {
   MessageSquare, MessageCircle, Heart, Users,
   ArrowDown, BadgeCheck, Sparkles, CheckCircle2,
   UserSearch, Hourglass, Trash2, AlertTriangle,
-  ChevronLeft, ChevronRight, Upload, Shield, HeartHandshake, X, Phone
+  ChevronLeft, ChevronRight, Upload, Shield, HeartHandshake, X
 } from 'lucide-react';
 import { FeedItem } from '../data/feedData';
 import LocationTrustTicker from './LocationTrustTicker';
 import SellerSuggestCarousel from './SellerSuggestCarousel';
+import CallNowButton from './CallNowButton';
 
 interface FeedCardProps {
   item: FeedItem;
@@ -289,10 +290,7 @@ function MyCategoryCard({ item }: { item: FeedItem }) {
             >
               {enquirySent ? 'Enquiry Sent!' : 'Get Best Price'}
             </button>
-            <button className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap border border-[#1d8480] text-[#1d8480] bg-white hover:bg-teal-50 transition-all active:scale-95">
-              <Phone className="w-3.5 h-3.5" />
-              Call Now
-            </button>
+            <CallNowButton variant="desktop" />
           </div>
         </div>
 
@@ -330,10 +328,7 @@ function MyCategoryCard({ item }: { item: FeedItem }) {
           >
             {enquirySent ? 'Enquiry Sent!' : 'Get Best Price'}
           </button>
-          <button className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold border border-[#1d8480] text-[#1d8480] hover:bg-teal-50 transition-all active:scale-95">
-            <Phone className="w-3.5 h-3.5" />
-            Call Now
-          </button>
+          <CallNowButton variant="mobile" />
         </div>
       </div>
 
