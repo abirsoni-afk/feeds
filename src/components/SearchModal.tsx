@@ -701,35 +701,20 @@ const [localOnly, setLocalOnly] = useState(false);
 
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* City + nearby-only toggle — on the header's right corner on desktop; msite keeps them
-                inline in the body instead (refine panel, curated results, loader), where there's more room.
-                While results are stale, this slot swaps to a Find Best Match pill instead of adding a
-                whole extra banner row below the header — same row, zero added height. */}
+                inline in the body instead (refine panel, curated results, loader), where there's more room. */}
             <div className="hidden md:flex items-center gap-2">
-              {resultsAreStale && !isFinding ? (
-                <button
-                  type="button"
-                  onClick={handleFindBestMatch}
-                  title="See sellers matching your updated requirement"
-                  className="relative flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3.5 py-1.5 shadow-sm transition-colors animate-cta-fade-in"
-                >
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 ring-2 ring-white" />
-                  <Sparkles className="w-3 h-3" />
-                  Find Best Match
-                </button>
-              ) : (
-                <LocationRow
-                  selectedCity={selectedCity}
-                  setSelectedCity={setSelectedCity}
-                  cityOpen={cityOpen}
-                  setCityOpen={setCityOpen}
-                  cityQuery={cityQuery}
-                  setCityQuery={setCityQuery}
-                  citySuggestions={citySuggestions}
-                  cityInputRef={cityInputRef}
-                  localOnly={localOnly}
-                  setLocalOnly={setLocalOnly}
-                />
-              )}
+              <LocationRow
+                selectedCity={selectedCity}
+                setSelectedCity={setSelectedCity}
+                cityOpen={cityOpen}
+                setCityOpen={setCityOpen}
+                cityQuery={cityQuery}
+                setCityQuery={setCityQuery}
+                citySuggestions={citySuggestions}
+                cityInputRef={cityInputRef}
+                localOnly={localOnly}
+                setLocalOnly={setLocalOnly}
+              />
             </div>
             <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
               <X className="w-4 h-4 text-slate-500" />
@@ -738,6 +723,25 @@ const [localOnly, setLocalOnly] = useState(false);
           </div>
 
         </div>
+        )}
+
+        {/* Stale-results strip — specs changed since this match ran. Msite shows this inline in the
+            curated body instead (after the spec chips), so it doesn't compete with the header. */}
+        {resultsAreStale && !isFinding && (
+          <div className="hidden md:flex flex-shrink-0 items-center gap-3 px-4 py-1.5 bg-amber-50 border-b border-amber-100">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-amber-800 min-w-0">
+              <Info className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">See sellers matching your updated requirement</span>
+            </span>
+            <button
+              type="button"
+              onClick={handleFindBestMatch}
+              className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3.5 py-1.5 shadow-sm transition-colors"
+            >
+              <Sparkles className="w-3 h-3" />
+              Find Best Match
+            </button>
+          </div>
         )}
 
         {/* ── Body ── */}
