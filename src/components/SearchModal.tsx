@@ -648,8 +648,10 @@ const [localOnly, setLocalOnly] = useState(false);
       <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" onClick={onClose} />
 
       {/* Modal positioned below header — full-bleed on msite, centered card on desktop */}
+      {/* Popup is now allowed to extend over the page header — just a small
+          symmetric margin all round instead of reserving space below it. */}
       <div
-        className="absolute inset-0 flex justify-center items-center px-0 md:px-3 pb-0 md:pb-3 pt-0 md:pt-[55px]"
+        className="absolute inset-0 flex justify-center items-center px-0 md:px-3 py-0 md:py-3"
         style={{ minHeight: 0 }}
       >
       <div
@@ -657,8 +659,8 @@ const [localOnly, setLocalOnly] = useState(false);
           !hasQuery && bestMatchId === null
             ? 'max-w-none md:max-w-[820px] md:h-auto'
             : topPicks.length > 0
-            ? 'max-w-none md:max-w-[1080px] md:h-auto md:max-h-[860px]'
-            : 'max-w-none md:max-w-[1000px] md:h-[85vh] md:max-h-[860px]'
+            ? 'max-w-none md:max-w-[1080px] md:h-auto md:max-h-[calc(100vh-24px)]'
+            : 'max-w-none md:max-w-[1000px] md:h-[92vh] md:max-h-[calc(100vh-24px)]'
         }`}
         onClick={e => e.stopPropagation()}
       >
