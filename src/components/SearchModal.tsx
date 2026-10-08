@@ -717,17 +717,26 @@ const [localOnly, setLocalOnly] = useState(false);
                 localOnly={localOnly}
                 setLocalOnly={setLocalOnly}
               />
+              {/* Only ever shown once the buyer has actually changed something after landing on
+                  results — never a default/always-on CTA. Visible text + CTA together (not just a
+                  tooltip) so the "why am I seeing this" context is actually communicated, still in
+                  the header's existing row rather than a new one. */}
               {resultsAreStale && !isFinding && (
-                <button
-                  type="button"
-                  onClick={handleFindBestMatch}
-                  title="See sellers matching your updated requirement"
-                  className="relative flex-shrink-0 flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-1 shadow-sm transition-colors animate-cta-fade-in"
-                >
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 ring-2 ring-white" />
-                  <Sparkles className="w-3 h-3" />
-                  Find Best Match
-                </button>
+                <div className="flex-shrink-0 flex items-center gap-1.5 animate-cta-fade-in">
+                  <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 whitespace-nowrap">
+                    <Info className="w-3 h-3 flex-shrink-0" />
+                    Requirement updated
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleFindBestMatch}
+                    title="See sellers matching your updated requirement"
+                    className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-1 shadow-sm transition-colors"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    Find Best Match
+                  </button>
+                </div>
               )}
             </div>
             <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
