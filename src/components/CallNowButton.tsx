@@ -9,9 +9,13 @@ interface CallNowButtonProps {
 
 // Shared "Call Now" CTA for feed post cards — tapping it fakes a short call
 // flow instead of doing nothing: Connecting... (ringing phone icon) for 4s,
-// then Call Connected for 3s, then back to the idle Call Now state. Each
-// phase change cross-fades its label/icon in rather than snapping, and the
-// button itself eases its color change instead of switching instantly.
+// then Call Connected for 3s, then back to the idle Call Now state.
+//
+// The button's box size must never change across phases (that read as a
+// jerk), so its width/height are reserved by an invisible span holding the
+// longest label ("Call Connected") and the real, phase-dependent content is
+// laid on top of it with position:absolute + inset-0 — the visible content
+// cross-fades, but the button itself never resizes.
 const CONNECTING_MS = 4000;
 const CONNECTED_MS = 3000;
 
@@ -38,11 +42,8 @@ export default function CallNowButton({ variant = 'desktop' }: CallNowButtonProp
 
   const sizing =
     variant === 'mobile'
-      ? 'flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-colors duration-300 ease-out active:scale-95'
-      // Fixed min-width so the longer "Call Connected" label doesn't snap the
-      // button wider — it's the width jump, not the color change, that reads
-      // as a jerk when the CTA switches state.
-      : 'inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap min-w-[132px] transition-colors duration-300 ease-out active:scale-95';
+      ? 'relative flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-colors duration-300 ease-out active:scale-95'
+      : 'relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-colors duration-300 ease-out active:scale-95';
 
   const tone =
     phase === 'connected'
@@ -53,22 +54,31 @@ export default function CallNowButton({ variant = 'desktop' }: CallNowButtonProp
 
   return (
     <button type="button" onClick={startCall} disabled={phase !== 'idle'} className={`${sizing} ${tone}`}>
-      {phase === 'connected' ? (
-        <span key="connected" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
-          <Check className="w-3.5 h-3.5" strokeWidth={3} />
-          Call Connected
-        </span>
-      ) : phase === 'connecting' ? (
-        <span key="connecting" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
-          <Phone className="w-3.5 h-3.5 animate-call-ring" />
-          Connecting...
-        </span>
-      ) : (
-        <span key="idle" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
-          <Phone className="w-3.5 h-3.5" />
-          Call Now
-        </span>
-      )}
+      {/* Invisible sizer — reserves the button's box size for the longest label so no
+          phase change ever resizes it; the visible content overlays it absolutely. */}
+      <span className="invisible inline-flex items-center gap-1.5" aria-hidden="true">
+        <Check className="w-3.5 h-3.5" strokeWidth={3} />
+        Call Connected
+      </span>
+
+      <span className="absolute inset-0 inline-flex items-center justify-center gap-1.5">
+        {phase === 'connected' ? (
+          <span key="connected" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
+            <Check className="w-3.5 h-3.5" strokeWidth={3} />
+            Call Connected
+          </span>
+        ) : phase === 'connecting' ? (
+          <span key="connecting" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
+            <Phone className="w-3.5 h-3.5 animate-call-ring" />
+            Connecting...
+          </span>
+        ) : (
+          <span key="idle" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
+            <Phone className="w-3.5 h-3.5" />
+            Call Now
+          </span>
+        )}
+      </span>
     </button>
   );
 }
