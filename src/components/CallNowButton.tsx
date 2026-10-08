@@ -45,9 +45,12 @@ export default function CallNowButton({ variant = 'desktop' }: CallNowButtonProp
       ? 'relative flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-colors duration-300 ease-out active:scale-95'
       : 'relative inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-colors duration-300 ease-out active:scale-95';
 
+  // Always keep a 1px border — even "transparent" — so the rendered box size
+  // (border adds to it regardless of box-sizing when width is auto) never
+  // changes across phases; only its color/fill does.
   const tone =
     phase === 'connected'
-      ? 'bg-emerald-100 text-emerald-700 cursor-default'
+      ? 'border border-transparent bg-emerald-100 text-emerald-700 cursor-default'
       : phase === 'connecting'
       ? 'border border-[#1d8480] text-[#1d8480] bg-white cursor-default'
       : 'border border-[#1d8480] text-[#1d8480] bg-white hover:bg-teal-50';
