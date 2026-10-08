@@ -1878,7 +1878,7 @@ function ResultsCarousel({
   }
 
   return (
-    <div className="z-20 bg-white flex flex-col rounded-br-xl overflow-y-auto md:overflow-hidden md:h-full">
+    <div className="z-20 bg-white flex flex-col rounded-br-xl overflow-y-auto">
       {/* Line 1 — city + nearby-only toggle — msite only; desktop shows these on the header instead */}
       <div className="md:hidden">
         <div className="flex-shrink-0 px-4 pt-3">
@@ -2096,13 +2096,9 @@ function ResultsCarousel({
         )}
       </div>
 
-      {/* Desktop — 4 cards per page, with edge-overlay nav arrows on whichever side has more.
-          This area fills whatever vertical room the (now viewport-capped) popup has left — when
-          the stale-results banner appears/disappears or the popup is shorter on some screens, each
-          card's photo flexes to absorb the difference so the info block + CTAs below it never get
-          cropped and nothing here ever needs its own scrollbar. */}
-      <div className="hidden md:flex md:flex-col flex-1 min-h-0 px-3 pb-2">
-        <div className="relative flex-1 min-h-0 flex flex-col">
+      {/* Desktop — 4 cards per page, with edge-overlay nav arrows on whichever side has more */}
+      <div className="hidden md:block px-3 pb-2 flex-shrink-0">
+        <div className="relative">
           {carouselPage > 0 && (
             <button
               onClick={() => setCarouselPage(p => Math.max(0, p - 1))}
@@ -2125,7 +2121,7 @@ function ResultsCarousel({
           )}
           <div
             key={`${showNearby ? 'nearby' : 'toppicks'}-${carouselPage}`}
-            className="grid grid-cols-4 auto-rows-fr gap-2.5 animate-loader-fade-in flex-1 min-h-0"
+            className="grid grid-cols-4 gap-2.5 animate-loader-fade-in"
           >
             {pageItems.map((seller, idx) => {
               const { ribbon, ribbonTone } = ribbonFor(idx);
@@ -2146,7 +2142,7 @@ function ResultsCarousel({
 
         {/* Results feedback — desktop: thumbs open an inline dropdown anchored above them */}
         {list.length > 0 && (
-          <div ref={fbDesktopRef} className="relative mt-3 flex-shrink-0 flex items-center justify-center gap-3">
+          <div ref={fbDesktopRef} className="relative mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
               <span className="text-xs font-semibold text-emerald-600">
                 Thanks for your feedback
@@ -2244,11 +2240,9 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
   }
 
   return (
-    <div className="flex flex-row md:flex-col gap-3 md:gap-0 rounded-xl border border-slate-200 bg-white overflow-hidden p-3 md:p-0 md:h-full">
-      {/* Photo — fixed thumbnail on msite; on desktop it flexes to fill whatever room is left in
-          the card once the info block below has taken what it needs, so the CTAs are never cropped
-          and the popup never needs to scroll, even when the stale-results banner takes extra room. */}
-      <div className="relative w-28 h-28 md:w-full md:h-auto md:flex-1 md:min-h-[56px] overflow-hidden bg-slate-100 rounded-lg md:rounded-none flex-shrink-0 md:flex-shrink">
+    <div className="flex flex-row md:flex-col gap-3 md:gap-0 rounded-xl border border-slate-200 bg-white overflow-hidden p-3 md:p-0">
+      {/* Photo — fixed thumbnail on msite, full-width square on desktop */}
+      <div className="relative w-28 h-28 md:w-full md:h-auto md:aspect-square overflow-hidden bg-slate-100 rounded-lg md:rounded-none flex-shrink-0">
         <img
           src={seller.image}
           alt={seller.name}
@@ -2265,8 +2259,8 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
         )}
       </div>
 
-      {/* Content — kept at its natural height on desktop; the photo above absorbs the rest */}
-      <div className="flex flex-col gap-1.5 flex-1 md:flex-none min-w-0 md:p-3">
+      {/* Content */}
+      <div className="flex flex-col gap-1.5 flex-1 min-w-0 md:p-3">
         {/* Product name */}
         <p className="text-sm font-bold text-slate-900 leading-tight line-clamp-1">{seller.name}</p>
 
