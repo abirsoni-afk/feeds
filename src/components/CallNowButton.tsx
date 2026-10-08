@@ -9,7 +9,9 @@ interface CallNowButtonProps {
 
 // Shared "Call Now" CTA for feed post cards — tapping it fakes a short call
 // flow instead of doing nothing: Connecting... (ringing phone icon) for 4s,
-// then Call Connected for 3s, then back to the idle Call Now state.
+// then Call Connected for 3s, then back to the idle Call Now state. Each
+// phase change cross-fades its label/icon in rather than snapping, and the
+// button itself eases its color change instead of switching instantly.
 const CONNECTING_MS = 4000;
 const CONNECTED_MS = 3000;
 
@@ -36,8 +38,8 @@ export default function CallNowButton({ variant = 'desktop' }: CallNowButtonProp
 
   const sizing =
     variant === 'mobile'
-      ? 'flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all active:scale-95'
-      : 'inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all active:scale-95';
+      ? 'flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-colors duration-300 ease-out active:scale-95'
+      : 'inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-colors duration-300 ease-out active:scale-95';
 
   const tone =
     phase === 'connected'
@@ -49,15 +51,20 @@ export default function CallNowButton({ variant = 'desktop' }: CallNowButtonProp
   return (
     <button type="button" onClick={startCall} disabled={phase !== 'idle'} className={`${sizing} ${tone}`}>
       {phase === 'connected' ? (
-        <>
+        <span key="connected" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
           <Check className="w-3.5 h-3.5" strokeWidth={3} />
           Call Connected
-        </>
+        </span>
+      ) : phase === 'connecting' ? (
+        <span key="connecting" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
+          <Phone className="w-3.5 h-3.5 animate-call-ring" />
+          Connecting...
+        </span>
       ) : (
-        <>
-          <Phone className={`w-3.5 h-3.5 ${phase === 'connecting' ? 'animate-call-ring' : ''}`} />
-          {phase === 'connecting' ? 'Connecting...' : 'Call Now'}
-        </>
+        <span key="idle" className="inline-flex items-center gap-1.5 animate-cta-fade-in">
+          <Phone className="w-3.5 h-3.5" />
+          Call Now
+        </span>
       )}
     </button>
   );
