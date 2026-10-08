@@ -701,9 +701,7 @@ const [localOnly, setLocalOnly] = useState(false);
 
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* City + nearby-only toggle — on the header's right corner on desktop; msite keeps them
-                inline in the body instead (refine panel, curated results, loader), where there's more room.
-                City/local-only stay visible even while stale — the Find Best Match pill sits alongside
-                them in the same row (not a separate banner row), with the full context as its tooltip. */}
+                inline in the body instead (refine panel, curated results, loader), where there's more room. */}
             <div className="hidden md:flex items-center gap-2">
               <LocationRow
                 selectedCity={selectedCity}
@@ -717,27 +715,6 @@ const [localOnly, setLocalOnly] = useState(false);
                 localOnly={localOnly}
                 setLocalOnly={setLocalOnly}
               />
-              {/* Only ever shown once the buyer has actually changed something after landing on
-                  results — never a default/always-on CTA. Visible text + CTA together (not just a
-                  tooltip) so the "why am I seeing this" context is actually communicated, still in
-                  the header's existing row rather than a new one. */}
-              {resultsAreStale && !isFinding && (
-                <div className="flex-shrink-0 flex items-center gap-1.5 animate-cta-fade-in">
-                  <span className="flex items-center gap-1 text-[11px] font-medium text-amber-700 whitespace-nowrap">
-                    <Info className="w-3 h-3 flex-shrink-0" />
-                    Requirement updated
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleFindBestMatch}
-                    title="See sellers matching your updated requirement"
-                    className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-1 shadow-sm transition-colors"
-                  >
-                    <Sparkles className="w-3 h-3" />
-                    Find Best Match
-                  </button>
-                </div>
-              )}
             </div>
             <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
               <X className="w-4 h-4 text-slate-500" />
@@ -746,6 +723,26 @@ const [localOnly, setLocalOnly] = useState(false);
           </div>
 
         </div>
+        )}
+
+        {/* Stale-results strip — specs changed since this match ran. Takes the same width/row the
+            results-feedback bar would otherwise use, so showing this and hiding feedback (below,
+            in ResultsCarousel) keeps the overall layout footprint unchanged rather than stacking. */}
+        {resultsAreStale && !isFinding && (
+          <div className="hidden md:flex flex-shrink-0 items-center gap-3 px-4 py-1.5 bg-amber-50 border-b border-amber-100">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-amber-800 min-w-0">
+              <Info className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">See sellers matching your updated requirement</span>
+            </span>
+            <button
+              type="button"
+              onClick={handleFindBestMatch}
+              className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3.5 py-1.5 shadow-sm transition-colors"
+            >
+              <Sparkles className="w-3 h-3" />
+              Find Best Match
+            </button>
+          </div>
         )}
 
         {/* ── Body ── */}
@@ -2047,8 +2044,9 @@ function ResultsCarousel({
           })}
         </div>
 
-        {/* Results feedback — mobile: thumbs open a bottom sheet with reason chips */}
-        {list.length > 0 && (
+        {/* Results feedback — mobile: thumbs open a bottom sheet with reason chips.
+            Same stale-results suppression as desktop. */}
+        {list.length > 0 && !resultsAreStale && (
           <div className="mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
               <span className="text-xs font-semibold text-emerald-600">
@@ -2146,8 +2144,10 @@ function ResultsCarousel({
           </div>
         </div>
 
-        {/* Results feedback — desktop: thumbs open an inline dropdown anchored above them */}
-        {list.length > 0 && (
+        {/* Results feedback — desktop: thumbs open an inline dropdown anchored above them.
+            Hidden while results are stale — rating results you've already flagged as out of
+            date against the buyer's updated requirement isn't a meaningful signal. */}
+        {list.length > 0 && !resultsAreStale && (
           <div ref={fbDesktopRef} className="relative mt-3 flex items-center justify-center gap-3">
             {fbDone ? (
               <span className="text-xs font-semibold text-emerald-600">
