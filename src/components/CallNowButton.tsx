@@ -39,7 +39,10 @@ export default function CallNowButton({ variant = 'desktop' }: CallNowButtonProp
   const sizing =
     variant === 'mobile'
       ? 'flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-colors duration-300 ease-out active:scale-95'
-      : 'inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-colors duration-300 ease-out active:scale-95';
+      // Fixed min-width so the longer "Call Connected" label doesn't snap the
+      // button wider — it's the width jump, not the color change, that reads
+      // as a jerk when the CTA switches state.
+      : 'inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap min-w-[132px] transition-colors duration-300 ease-out active:scale-95';
 
   const tone =
     phase === 'connected'
