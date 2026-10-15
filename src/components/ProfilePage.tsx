@@ -118,7 +118,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
               shorter than the main content ── */}
           <aside className="hidden lg:block w-64 flex-shrink-0 bg-white sticky top-[55px] self-start h-[calc(100vh-55px)] overflow-y-auto">
               <div className="overflow-hidden">
-                <div className="px-4 pt-3 pb-4">
+                <div className="px-4 pt-1 pb-4">
                   {/* Nav — grouped into labeled sections (Account / Verification & Trust /
                       Buying / Services) instead of one continuous list, so related
                       destinations scan together, same as the feed's shortcut groups */}
