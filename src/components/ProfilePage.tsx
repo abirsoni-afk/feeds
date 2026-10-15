@@ -89,7 +89,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
               just flush to the left edge instead of inset by page padding ── */}
           <aside className="hidden lg:block w-64 flex-shrink-0 py-5 pl-3 sticky top-0">
               <div className="bg-white rounded-xl overflow-hidden shadow-md">
-                <div className="px-4 pt-4 pb-4">
+                <div className="px-4 pt-3 pb-4">
                   <div className="relative">
                     <button className="absolute top-0 right-0 text-gray-400 hover:text-gray-600 transition-colors">
                       <Settings className="w-3.5 h-3.5" />
@@ -107,16 +107,10 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                         </p>
                       </div>
                     </div>
-
-                    <div className="mt-2.5 flex justify-end">
-                      <button className="text-[10px] text-[#1d8480] font-semibold hover:underline">
-                        Edit Profile
-                      </button>
-                    </div>
                   </div>
 
                   {/* Nav list — same icon-chip row treatment as the feed sidebar's shortcuts */}
-                  <nav className="mt-3 pt-3 border-t border-gray-100 space-y-1.5">
+                  <nav className="mt-2 pt-3 border-t border-gray-100 space-y-1.5">
                     {navItems.map((item) => (
                       <button
                         key={item.label}
