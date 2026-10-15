@@ -2,7 +2,7 @@ import {
   LayoutGrid, UserRound, MessageSquare, Crown, BadgeCheck, ShieldCheck,
   IndianRupee, Truck, Gauge, History, LifeBuoy, Pencil, MapPin, Calendar,
   Store, HelpCircle, Globe, User, ChevronDown, Info, Contact,
-  Building2, SlidersHorizontal, Ticket, ChevronRight, Settings,
+  Building2, SlidersHorizontal, Ticket, ChevronRight,
 } from 'lucide-react';
 
 interface ProfilePageProps {
@@ -90,25 +90,6 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           <aside className="hidden lg:block w-64 flex-shrink-0 py-5 sticky top-0">
               <div className="bg-white overflow-hidden">
                 <div className="px-4 pt-3 pb-4">
-                  <div className="relative">
-                    <button className="absolute top-0 right-0 text-gray-400 hover:text-gray-600 transition-colors">
-                      <Settings className="w-3.5 h-3.5" />
-                    </button>
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-full bg-[#2e3192] flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-bold text-sm">A</span>
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="font-bold text-gray-900 text-sm leading-tight">Aaan</h3>
-                        <p className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                          <MapPin className="w-3 h-3 flex-shrink-0" />
-                          New Delhi
-                          <Pencil className="w-3 h-3 flex-shrink-0 text-gray-400" />
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Nav list — same icon-chip row treatment as the feed sidebar's shortcuts */}
                   <nav className="mt-2 pt-3 space-y-1.5">
                     {navItems.map((item) => (
