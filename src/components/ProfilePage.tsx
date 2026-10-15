@@ -108,17 +108,10 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                       </div>
                     </div>
 
-                    {/* Profile completion bar — same teal fill + Edit Profile pattern as the feed sidebar */}
-                    <div className="mt-2.5">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-semibold text-gray-500">Profile Strength · 47%</span>
-                        <button className="text-[10px] text-[#1d8480] font-semibold hover:underline">
-                          Edit Profile
-                        </button>
-                      </div>
-                      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#1d8480] rounded-full" style={{ width: '47%' }} />
-                      </div>
+                    <div className="mt-2.5 flex justify-end">
+                      <button className="text-[10px] text-[#1d8480] font-semibold hover:underline">
+                        Edit Profile
+                      </button>
                     </div>
                   </div>
 
