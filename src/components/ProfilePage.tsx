@@ -19,14 +19,14 @@ interface NavItem {
 
 const navGroups: { label: string; items: NavItem[] }[] = [
   {
-    label: 'Account',
+    label: '',
     items: [
       { icon: LayoutGrid, label: 'Dashboard' },
       { icon: UserRound, label: 'My Profile', badge: '47%', active: true },
     ],
   },
   {
-    label: 'Verification & Trust',
+    label: '',
     items: [
       { icon: Crown, label: 'Verified Business Buyer' },
       { icon: ShieldCheck, label: 'Seller Verification', isNew: true },
@@ -122,11 +122,13 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                       Buying / Services) instead of one continuous list, so related
                       destinations scan together, same as the feed's shortcut groups */}
                   <nav className="mt-2 pt-3 space-y-3">
-                    {navGroups.map((group) => (
-                      <div key={group.label}>
-                        <p className="px-2.5 mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-400">
-                          {group.label}
-                        </p>
+                    {navGroups.map((group, idx) => (
+                      <div key={idx}>
+                        {group.label && (
+                          <p className="px-2.5 mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-400">
+                            {group.label}
+                          </p>
+                        )}
                         <div className="space-y-1.5">
                           {group.items.map((item) => (
                             <button
