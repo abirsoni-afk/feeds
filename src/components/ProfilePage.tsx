@@ -80,13 +80,13 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
         </div>
       </header>
 
-      {/* Page body below fixed nav — same scroll/spacing convention as the rest of the app */}
+      {/* Page body below fixed nav — flush edge-to-edge (unlike the feed's centered
+          max-w-screen-xl column), matching the dashboard layout this page is meant to have */}
       <div className="pt-[55px] min-h-screen bg-[hsl(220,20%,97%)]">
-        <div className="max-w-screen-xl mx-auto px-4">
-          <div className="flex gap-4 items-start">
-            {/* ── Left nav — same floating rounded-card language as the feed's LeftSidebar,
-                instead of a flush, bordered, full-height panel ── */}
-            <aside className="hidden lg:block w-64 flex-shrink-0 py-5 sticky top-0">
+        <div className="flex items-start">
+          {/* ── Left nav — same floating rounded-card language as the feed's LeftSidebar,
+              just flush to the left edge instead of inset by page padding ── */}
+          <aside className="hidden lg:block w-64 flex-shrink-0 py-5 pl-3 sticky top-0">
               <div className="bg-white rounded-xl overflow-hidden shadow-md">
                 <div className="px-4 pt-4 pb-4">
                   <div className="relative">
@@ -190,8 +190,8 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
               </div>
             </aside>
 
-            {/* ── Main content ── */}
-            <main className="flex-1 min-w-0 py-5 space-y-4">
+          {/* ── Main content ── */}
+          <main className="flex-1 min-w-0 py-5 pl-4 pr-4 md:pr-6 space-y-4">
               {/* Row 1 — Profile card + Verified Buyer Progress */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 {/* Profile card */}
@@ -295,8 +295,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   </button>
                 ))}
               </div>
-            </main>
-          </div>
+          </main>
         </div>
       </div>
     </div>
