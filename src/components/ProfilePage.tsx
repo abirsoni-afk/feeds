@@ -143,20 +143,6 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   </div>
                 </div>
               </div>
-
-              {/* Get Verified Business Buyer — separate card, same style as My Orders below the shortcuts card in the feed sidebar */}
-              <div className="mt-3 bg-white rounded-xl shadow-md p-4">
-                <button className="w-full flex items-center gap-2.5 text-left">
-                  <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex-shrink-0">
-                    <Crown className="w-4 h-4" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-xs font-bold text-amber-700">Get Verified Business Buyer</span>
-                    <span className="block text-[10px] text-gray-400 mt-0.5">Boost trust with sellers</span>
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
-                </button>
-              </div>
             </aside>
 
           {/* ── Main content ── */}
