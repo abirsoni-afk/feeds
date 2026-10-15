@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, MessageSquare, Search, Sparkle, FilePlus2, CheckCircle2 } from 'lucide-react';
 import Header from './components/Header';
@@ -20,6 +20,14 @@ export default function App() {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [showProfilePage, setShowProfilePage] = useState(false);
 
+  useEffect(() => {
+    // The feed scrolls inside its own fixed-height container while the Profile
+    // page scrolls the document body — reset both on every transition so the
+    // next view always mounts at the top instead of inheriting a stale scroll position.
+    window.scrollTo(0, 0);
+    document.querySelector('[data-feed-scroll-container]')?.scrollTo(0, 0);
+  }, [showProfilePage]);
+
   if (showProfilePage) {
     return <ProfilePage onBack={() => setShowProfilePage(false)} />;
   }
@@ -32,7 +40,7 @@ export default function App() {
       />
 
       {/* Page body below fixed nav — single scrollable surface */}
-      <div className="pt-[103px] md:pt-[55px] h-screen overflow-y-auto scrollbar-thin pb-16 lg:pb-0">
+      <div data-feed-scroll-container className="pt-[103px] md:pt-[55px] h-screen overflow-y-auto scrollbar-thin pb-16 lg:pb-0">
         <MobileProfileBar persona={activePersona} />
         <div className="max-w-screen-xl mx-auto px-4">
           <div className="flex gap-4 items-start">
