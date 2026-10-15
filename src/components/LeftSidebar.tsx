@@ -104,8 +104,8 @@ export default function LeftSidebar({ persona, onProfileClick }: LeftSidebarProp
                         <item.icon className={group.grid ? "w-4 h-4 shrink-0" : "w-4 h-4 shrink-0"} />
                       </span>
                       <span className={group.grid
-                        ? "text-[10px] font-semibold text-gray-600 leading-tight text-center group-hover:text-[#1d8480]"
-                        : "text-[11px] font-semibold text-gray-700 leading-tight whitespace-nowrap group-hover:text-[#1d8480]"}>
+                        ? "text-[10px] font-medium text-gray-600 leading-tight text-center group-hover:text-[#1d8480]"
+                        : "text-[11px] font-medium text-gray-700 leading-tight whitespace-nowrap group-hover:text-[#1d8480]"}>
                         {item.label}
                       </span>
                       {item.badge && (

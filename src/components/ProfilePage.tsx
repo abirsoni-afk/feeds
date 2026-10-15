@@ -150,8 +150,8 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                                 <item.icon className="w-4 h-4 shrink-0" />
                               </span>
                               <span
-                                className={`text-[11px] font-semibold leading-tight whitespace-nowrap flex-1 min-w-0 text-left truncate ${
-                                  item.active ? 'text-[#1d8480]' : 'text-gray-700 group-hover:text-[#1d8480]'
+                                className={`text-[11px] leading-tight whitespace-nowrap flex-1 min-w-0 text-left truncate ${
+                                  item.active ? 'font-semibold text-[#1d8480]' : 'font-medium text-gray-700 group-hover:text-[#1d8480]'
                                 }`}
                               >
                                 {item.label}
