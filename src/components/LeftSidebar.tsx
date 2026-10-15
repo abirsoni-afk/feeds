@@ -30,9 +30,10 @@ const utilityGroups = [
 
 interface LeftSidebarProps {
   persona?: Persona;
+  onProfileClick?: () => void;
 }
 
-export default function LeftSidebar({ persona }: LeftSidebarProps) {
+export default function LeftSidebar({ persona, onProfileClick }: LeftSidebarProps) {
   const hasOrders = persona !== 'new-user';
   return (
     <aside className="w-full flex-shrink-0 space-y-3">
@@ -82,6 +83,7 @@ export default function LeftSidebar({ persona }: LeftSidebarProps) {
                   {group.items.map((item) => (
                     <button
                       key={item.label}
+                      onClick={item.label === 'My Profile' ? onProfileClick : undefined}
                       className={group.grid
                         ? "relative flex flex-col items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg bg-white border border-gray-200 shadow-sm hover:border-[#1d8480] hover:shadow-md hover:-translate-y-0.5 transition-all group"
                         : "relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg bg-white border border-gray-200 shadow-sm hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5 transition-all group"}

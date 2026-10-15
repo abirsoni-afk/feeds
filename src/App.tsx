@@ -8,6 +8,7 @@ import RightSidebar from './components/RightSidebar';
 import MobileProfileBar from './components/MobileProfileBar';
 import PersonaFloater, { Persona } from './components/PersonaFloater';
 import SearchModal from './components/SearchModal';
+import ProfilePage from './components/ProfilePage';
 import { FeedFilter } from './data/feedData';
 
 export default function App() {
@@ -17,6 +18,11 @@ export default function App() {
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [activePersona, setActivePersona] = useState<Persona>('bl-waiting');
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [showProfilePage, setShowProfilePage] = useState(false);
+
+  if (showProfilePage) {
+    return <ProfilePage onBack={() => setShowProfilePage(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -32,7 +38,7 @@ export default function App() {
           <div className="flex gap-4 items-start">
             {/* Column 1 — sticky on desktop, drawer on mobile */}
             <div className="hidden lg:block w-64 flex-shrink-0 py-5 sticky top-0">
-              <LeftSidebar persona={activePersona} />
+              <LeftSidebar persona={activePersona} onProfileClick={() => setShowProfilePage(true)} />
             </div>
 
             {/* Column 2 — main content */}
@@ -101,7 +107,7 @@ export default function App() {
             >
               <X className="w-4 h-4" />
             </button>
-            <LeftSidebar persona={activePersona} />
+            <LeftSidebar persona={activePersona} onProfileClick={() => { setLeftDrawerOpen(false); setShowProfilePage(true); }} />
           </div>
         </div>
       )}
