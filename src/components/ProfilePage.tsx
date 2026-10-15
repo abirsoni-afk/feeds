@@ -1,6 +1,6 @@
 import {
   LayoutGrid, UserRound, MessageSquare, Crown, BadgeCheck, ShieldCheck,
-  IndianRupee, Truck, Gauge, LifeBuoy, Pencil, MapPin, Calendar,
+  IndianRupee, Truck, Gauge, History, LifeBuoy, Pencil, MapPin, Calendar,
   Store, HelpCircle, Globe, User, ChevronDown, Info, Contact,
   Building2, SlidersHorizontal, Ticket, ChevronRight, Settings,
 } from 'lucide-react';
@@ -12,10 +12,11 @@ interface ProfilePageProps {
 const navItems = [
   { icon: LayoutGrid, label: 'Dashboard' },
   { icon: UserRound, label: 'My Profile', badge: '47%', active: true },
-  { icon: MessageSquare, label: 'Messages' },
   { icon: Crown, label: 'Verified Business Buyer' },
   { icon: ShieldCheck, label: 'Seller Verification', isNew: true },
   { icon: BadgeCheck, label: 'Payment Safety', isNew: true },
+  { icon: MessageSquare, label: 'Messages' },
+  { icon: History, label: 'My Orders' },
   { icon: IndianRupee, label: 'Loans' },
   { icon: Truck, label: 'Ship With IM' },
   { icon: Gauge, label: 'Credit Score' },
