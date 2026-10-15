@@ -87,8 +87,8 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
         <div className="flex items-start">
           {/* ── Left nav — same floating rounded-card language as the feed's LeftSidebar,
               just flush to the left edge instead of inset by page padding ── */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 py-5 pl-3 sticky top-0">
-              <div className="bg-white rounded-xl overflow-hidden shadow-md">
+          <aside className="hidden lg:block w-64 flex-shrink-0 py-5 sticky top-0">
+              <div className="bg-white overflow-hidden">
                 <div className="px-4 pt-3 pb-4">
                   <div className="relative">
                     <button className="absolute top-0 right-0 text-gray-400 hover:text-gray-600 transition-colors">
