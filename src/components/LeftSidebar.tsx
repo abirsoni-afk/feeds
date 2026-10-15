@@ -85,8 +85,8 @@ export default function LeftSidebar({ persona, onProfileClick }: LeftSidebarProp
                       key={item.label}
                       onClick={item.label === 'My Profile' ? onProfileClick : undefined}
                       className={group.grid
-                        ? "relative flex flex-col items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg hover:bg-gray-50 transition-colors group"
-                        : "relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg hover:bg-gray-50 transition-colors group"}
+                        ? "relative flex flex-col items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg border border-transparent hover:border-gray-200 hover:shadow-sm hover:-translate-y-0.5 transition-all group"
+                        : "relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg border border-transparent hover:border-gray-200 hover:shadow-sm hover:translate-x-0.5 transition-all group"}
                     >
                       <span className={group.grid
                         ? "flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white transition-colors"
