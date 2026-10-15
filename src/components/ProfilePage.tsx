@@ -1,6 +1,6 @@
 import {
   LayoutGrid, UserRound, MessageSquare, Crown, BadgeCheck, ShieldCheck,
-  IndianRupee, Truck, Gauge, History, LifeBuoy, Pencil, MapPin, Calendar,
+  IndianRupee, Truck, Gauge, Box, LifeBuoy, Pencil, MapPin, Calendar,
   Store, HelpCircle, Globe, User, ChevronDown, Info, Contact,
   Building2, SlidersHorizontal, Ticket, ChevronRight,
 } from 'lucide-react';
@@ -16,7 +16,7 @@ const navItems = [
   { icon: ShieldCheck, label: 'Seller Verification', isNew: true },
   { icon: BadgeCheck, label: 'Payment Safety', isNew: true },
   { icon: MessageSquare, label: 'Messages' },
-  { icon: History, label: 'My Orders' },
+  { icon: Box, label: 'My Orders' },
   { icon: IndianRupee, label: 'Loans' },
   { icon: Truck, label: 'Ship With IM' },
   { icon: Gauge, label: 'Credit Score' },
@@ -87,7 +87,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
         <div className="flex items-start">
           {/* ── Left nav — same floating rounded-card language as the feed's LeftSidebar,
               just flush to the left edge instead of inset by page padding ── */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 py-5 sticky top-0">
+          <aside className="hidden lg:block w-64 flex-shrink-0 pb-5 sticky top-0">
               <div className="bg-white overflow-hidden">
                 <div className="px-4 pt-3 pb-4">
                   {/* Nav list — same icon-chip row treatment as the feed sidebar's shortcuts */}
