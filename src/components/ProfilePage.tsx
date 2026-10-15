@@ -112,11 +112,12 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
       {/* Page body below fixed nav — flush edge-to-edge (unlike the feed's centered
           max-w-screen-xl column), matching the dashboard layout this page is meant to have */}
       <div className="pt-[55px] min-h-screen bg-[hsl(220,20%,97%)]">
-        <div className="flex items-start">
-          {/* ── Left nav — same floating rounded-card language as the feed's LeftSidebar,
-              just flush to the left edge instead of inset by page padding ── */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 pb-5 sticky top-0">
-              <div className="bg-white overflow-hidden">
+        <div className="flex items-stretch">
+          {/* ── Left nav — full-height white column (not a floating card), so it
+              never cuts off short of the page's bottom even when the nav list is
+              shorter than the main content ── */}
+          <aside className="hidden lg:block w-64 flex-shrink-0 bg-white sticky top-[55px] self-start h-[calc(100vh-55px)] overflow-y-auto">
+              <div className="overflow-hidden">
                 <div className="px-4 pt-3 pb-4">
                   {/* Nav — grouped into labeled sections (Account / Verification & Trust /
                       Buying / Services) instead of one continuous list, so related
