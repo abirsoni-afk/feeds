@@ -1,6 +1,6 @@
 import {
   LayoutGrid, UserRound, MessageSquare, Crown, BadgeCheck, ShieldCheck,
-  IndianRupee, Truck, Gauge, Box, LifeBuoy, Pencil, MapPin, Calendar,
+  IndianRupee, Truck, Gauge, Box, Pencil, MapPin, Calendar,
   Store, HelpCircle, Globe, User, ChevronDown, Info, Contact,
   Building2, SlidersHorizontal, Ticket, ChevronRight,
 } from 'lucide-react';
@@ -169,20 +169,6 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                       </div>
                     ))}
                   </nav>
-
-                  <div className="mt-3 pt-3 border-t border-gray-100">
-                    <p className="px-2.5 mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-400">
-                      Support
-                    </p>
-                    <button className="flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg bg-white border border-gray-200 shadow-sm hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5 transition-all group">
-                      <span className="flex items-center justify-center w-7 h-7 rounded-md bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white transition-colors flex-shrink-0">
-                        <LifeBuoy className="w-4 h-4 shrink-0" />
-                      </span>
-                      <span className="text-[11px] font-semibold text-gray-700 group-hover:text-[#1d8480] leading-tight whitespace-nowrap">
-                        Help and support
-                      </span>
-                    </button>
-                  </div>
                 </div>
               </div>
             </aside>
