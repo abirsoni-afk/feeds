@@ -110,7 +110,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                   </div>
 
                   {/* Nav list — same icon-chip row treatment as the feed sidebar's shortcuts */}
-                  <nav className="mt-2 pt-3 border-t border-gray-100 space-y-1.5">
+                  <nav className="mt-2 pt-3 space-y-1.5">
                     {navItems.map((item) => (
                       <button
                         key={item.label}
