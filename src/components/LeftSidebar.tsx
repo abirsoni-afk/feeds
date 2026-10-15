@@ -6,7 +6,14 @@ import {
 import { recentRFQs } from '../data/feedData';
 import { Persona } from './PersonaFloater';
 
-const utilityGroups = [
+interface UtilityItem {
+  icon: typeof UserRound;
+  label: string;
+  badge?: string;
+  isNew?: boolean;
+}
+
+const utilityGroups: { label: string; grid?: boolean; items: UtilityItem[] }[] = [
   {
     label: '',
     items: [
@@ -85,9 +92,12 @@ export default function LeftSidebar({ persona, onProfileClick }: LeftSidebarProp
                       key={item.label}
                       onClick={item.label === 'My Profile' ? onProfileClick : undefined}
                       className={group.grid
-                        ? "relative flex flex-col items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg border border-transparent hover:border-gray-200 hover:shadow-sm hover:-translate-y-0.5 transition-all group"
-                        : "relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg border border-transparent hover:border-gray-200 hover:shadow-sm hover:translate-x-0.5 transition-all group"}
+                        ? "relative flex flex-col items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg bg-gray-50/40 border border-transparent hover:border-gray-200 hover:shadow-sm hover:bg-gray-50 hover:-translate-y-0.5 transition-all group"
+                        : "relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg bg-gray-50/40 border border-transparent hover:border-gray-200 hover:shadow-sm hover:bg-gray-50 hover:translate-x-0.5 transition-all group"}
                     >
+                      {group.grid && (
+                        <ChevronRight className="absolute top-1.5 right-1.5 w-3 h-3 text-gray-300 group-hover:text-gray-400 transition-colors" />
+                      )}
                       <span className={group.grid
                         ? "flex items-center justify-center w-8 h-8 rounded-lg bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white transition-colors"
                         : "flex items-center justify-center w-7 h-7 rounded-md bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white transition-colors"}>
@@ -107,6 +117,9 @@ export default function LeftSidebar({ persona, onProfileClick }: LeftSidebarProp
                         <span className="ml-auto rounded-full bg-[hsl(174,45%,95%)] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-[#1d8480]">
                           New
                         </span>
+                      )}
+                      {!group.grid && (
+                        <ChevronRight className={`w-3.5 h-3.5 flex-shrink-0 text-gray-300 group-hover:text-gray-400 transition-colors ${item.badge || item.isNew ? '' : 'ml-auto'}`} />
                       )}
                     </button>
                   ))}

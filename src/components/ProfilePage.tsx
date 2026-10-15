@@ -137,7 +137,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                               className={`relative flex w-full items-center justify-start gap-2 py-1.5 px-2 rounded-lg border transition-all group ${
                                 item.active
                                   ? 'bg-teal-50 border-[#1d8480] shadow-sm'
-                                  : 'border-transparent hover:border-gray-200 hover:shadow-sm hover:bg-gray-50/60'
+                                  : 'bg-gray-50/40 border-transparent hover:border-gray-200 hover:shadow-sm hover:bg-gray-50'
                               }`}
                             >
                               <span
@@ -166,6 +166,7 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                                   New
                                 </span>
                               )}
+                              <ChevronRight className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${item.badge || item.isNew ? '' : 'ml-auto'} ${item.active ? 'text-[#1d8480]' : 'text-gray-300 group-hover:text-gray-400'}`} />
                             </button>
                           ))}
                         </div>
