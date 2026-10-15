@@ -116,32 +116,32 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           {/* ── Left nav — full-height white column (not a floating card), so it
               never cuts off short of the page's bottom even when the nav list is
               shorter than the main content ── */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 bg-white sticky top-[55px] self-start h-[calc(100vh-55px)] overflow-y-auto">
+          <aside className="hidden lg:block w-64 flex-shrink-0 bg-white sticky top-[55px] self-start min-h-[calc(100vh-55px)]">
               <div className="overflow-hidden">
-                <div className="px-4 pt-1 pb-4">
+                <div className="px-3 pt-1 pb-3">
                   {/* Nav — grouped into labeled sections (Account / Verification & Trust /
                       Buying / Services) instead of one continuous list, so related
                       destinations scan together, same as the feed's shortcut groups */}
-                  <nav className="mt-2 pt-3 space-y-3">
+                  <nav className="mt-1 pt-2 space-y-2">
                     {navGroups.map((group, idx) => (
                       <div key={idx}>
                         {group.label && (
-                          <p className="px-2.5 mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-400">
+                          <p className="px-2 mb-0.5 text-[9px] font-bold uppercase tracking-wide text-gray-400">
                             {group.label}
                           </p>
                         )}
-                        <div className="space-y-1.5">
+                        <div className="space-y-1">
                           {group.items.map((item) => (
                             <button
                               key={item.label}
-                              className={`relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg border shadow-sm transition-all group ${
+                              className={`relative flex w-full items-center justify-start gap-2 py-1.5 px-2 rounded-lg border shadow-sm transition-all group ${
                                 item.active
                                   ? 'bg-teal-50 border-[#1d8480]'
                                   : 'bg-white border-gray-200 hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5'
                               }`}
                             >
                               <span
-                                className={`flex items-center justify-center w-7 h-7 rounded-md flex-shrink-0 transition-colors ${
+                                className={`flex items-center justify-center w-6 h-6 rounded-md flex-shrink-0 transition-colors ${
                                   item.active
                                     ? 'bg-[#1d8480] text-white'
                                     : 'bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white'
