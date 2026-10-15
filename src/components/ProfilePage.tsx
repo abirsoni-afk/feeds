@@ -41,7 +41,7 @@ const navGroups: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
-    label: 'Services',
+    label: 'More',
     items: [
       { icon: IndianRupee, label: 'Loans' },
       { icon: Truck, label: 'Ship With IM' },
