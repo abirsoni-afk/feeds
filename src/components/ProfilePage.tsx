@@ -134,10 +134,10 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
                           {group.items.map((item) => (
                             <button
                               key={item.label}
-                              className={`relative flex w-full items-center justify-start gap-2 py-1.5 px-2 rounded-lg border shadow-sm transition-all group ${
+                              className={`relative flex w-full items-center justify-start gap-2 py-1.5 px-2 rounded-lg transition-colors group ${
                                 item.active
-                                  ? 'bg-teal-50 border-[#1d8480]'
-                                  : 'bg-white border-gray-200 hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5'
+                                  ? 'bg-teal-50'
+                                  : 'hover:bg-gray-50'
                               }`}
                             >
                               <span
