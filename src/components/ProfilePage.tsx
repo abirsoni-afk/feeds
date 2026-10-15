@@ -9,17 +9,45 @@ interface ProfilePageProps {
   onBack: () => void;
 }
 
-const navItems = [
-  { icon: LayoutGrid, label: 'Dashboard' },
-  { icon: UserRound, label: 'My Profile', badge: '47%', active: true },
-  { icon: Crown, label: 'Verified Business Buyer' },
-  { icon: ShieldCheck, label: 'Seller Verification', isNew: true },
-  { icon: BadgeCheck, label: 'Payment Safety', isNew: true },
-  { icon: MessageSquare, label: 'Messages' },
-  { icon: Box, label: 'My Orders' },
-  { icon: IndianRupee, label: 'Loans' },
-  { icon: Truck, label: 'Ship With IM' },
-  { icon: Gauge, label: 'Credit Score' },
+interface NavItem {
+  icon: typeof LayoutGrid;
+  label: string;
+  badge?: string;
+  active?: boolean;
+  isNew?: boolean;
+}
+
+const navGroups: { label: string; items: NavItem[] }[] = [
+  {
+    label: 'Account',
+    items: [
+      { icon: LayoutGrid, label: 'Dashboard' },
+      { icon: UserRound, label: 'My Profile', badge: '47%', active: true },
+    ],
+  },
+  {
+    label: 'Verification & Trust',
+    items: [
+      { icon: Crown, label: 'Verified Business Buyer' },
+      { icon: ShieldCheck, label: 'Seller Verification', isNew: true },
+      { icon: BadgeCheck, label: 'Payment Safety', isNew: true },
+    ],
+  },
+  {
+    label: 'Buying',
+    items: [
+      { icon: MessageSquare, label: 'Messages' },
+      { icon: Box, label: 'My Orders' },
+    ],
+  },
+  {
+    label: 'Services',
+    items: [
+      { icon: IndianRupee, label: 'Loans' },
+      { icon: Truck, label: 'Ship With IM' },
+      { icon: Gauge, label: 'Credit Score' },
+    ],
+  },
 ];
 
 const milestones = [
@@ -90,48 +118,62 @@ export default function ProfilePage({ onBack }: ProfilePageProps) {
           <aside className="hidden lg:block w-64 flex-shrink-0 pb-5 sticky top-0">
               <div className="bg-white overflow-hidden">
                 <div className="px-4 pt-3 pb-4">
-                  {/* Nav list — same icon-chip row treatment as the feed sidebar's shortcuts */}
-                  <nav className="mt-2 pt-3 space-y-1.5">
-                    {navItems.map((item) => (
-                      <button
-                        key={item.label}
-                        className={`relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg border shadow-sm transition-all group ${
-                          item.active
-                            ? 'bg-teal-50 border-[#1d8480]'
-                            : 'bg-white border-gray-200 hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5'
-                        }`}
-                      >
-                        <span
-                          className={`flex items-center justify-center w-7 h-7 rounded-md flex-shrink-0 transition-colors ${
-                            item.active
-                              ? 'bg-[#1d8480] text-white'
-                              : 'bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white'
-                          }`}
-                        >
-                          <item.icon className="w-4 h-4 shrink-0" />
-                        </span>
-                        <span
-                          className={`text-[11px] font-semibold leading-tight whitespace-nowrap flex-1 min-w-0 text-left truncate ${
-                            item.active ? 'text-[#1d8480]' : 'text-gray-700 group-hover:text-[#1d8480]'
-                          }`}
-                        >
-                          {item.label}
-                        </span>
-                        {item.badge && (
-                          <span className="ml-auto flex-shrink-0 rounded-full bg-[#f8d9ad] px-1.5 py-0.5 text-[9px] font-bold text-[#b56a12]">
-                            {item.badge}
-                          </span>
-                        )}
-                        {item.isNew && (
-                          <span className="ml-auto flex-shrink-0 rounded-full bg-[hsl(174,45%,95%)] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-[#1d8480]">
-                            New
-                          </span>
-                        )}
-                      </button>
+                  {/* Nav — grouped into labeled sections (Account / Verification & Trust /
+                      Buying / Services) instead of one continuous list, so related
+                      destinations scan together, same as the feed's shortcut groups */}
+                  <nav className="mt-2 pt-3 space-y-3">
+                    {navGroups.map((group) => (
+                      <div key={group.label}>
+                        <p className="px-2.5 mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-400">
+                          {group.label}
+                        </p>
+                        <div className="space-y-1.5">
+                          {group.items.map((item) => (
+                            <button
+                              key={item.label}
+                              className={`relative flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg border shadow-sm transition-all group ${
+                                item.active
+                                  ? 'bg-teal-50 border-[#1d8480]'
+                                  : 'bg-white border-gray-200 hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5'
+                              }`}
+                            >
+                              <span
+                                className={`flex items-center justify-center w-7 h-7 rounded-md flex-shrink-0 transition-colors ${
+                                  item.active
+                                    ? 'bg-[#1d8480] text-white'
+                                    : 'bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white'
+                                }`}
+                              >
+                                <item.icon className="w-4 h-4 shrink-0" />
+                              </span>
+                              <span
+                                className={`text-[11px] font-semibold leading-tight whitespace-nowrap flex-1 min-w-0 text-left truncate ${
+                                  item.active ? 'text-[#1d8480]' : 'text-gray-700 group-hover:text-[#1d8480]'
+                                }`}
+                              >
+                                {item.label}
+                              </span>
+                              {item.badge && (
+                                <span className="ml-auto flex-shrink-0 rounded-full bg-[#f8d9ad] px-1.5 py-0.5 text-[9px] font-bold text-[#b56a12]">
+                                  {item.badge}
+                                </span>
+                              )}
+                              {item.isNew && (
+                                <span className="ml-auto flex-shrink-0 rounded-full bg-[hsl(174,45%,95%)] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-[#1d8480]">
+                                  New
+                                </span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </nav>
 
                   <div className="mt-3 pt-3 border-t border-gray-100">
+                    <p className="px-2.5 mb-1 text-[9px] font-bold uppercase tracking-wide text-gray-400">
+                      Support
+                    </p>
                     <button className="flex w-full items-center justify-start gap-2.5 py-2 px-2.5 rounded-lg bg-white border border-gray-200 shadow-sm hover:border-[#1d8480] hover:shadow-md hover:translate-x-0.5 transition-all group">
                       <span className="flex items-center justify-center w-7 h-7 rounded-md bg-[hsl(174,45%,95%)] text-[#1d8480] group-hover:bg-[#1d8480] group-hover:text-white transition-colors flex-shrink-0">
                         <LifeBuoy className="w-4 h-4 shrink-0" />
