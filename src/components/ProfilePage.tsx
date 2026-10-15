@@ -34,14 +34,14 @@ const navGroups: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
-    label: 'Buying',
+    label: '',
     items: [
       { icon: MessageSquare, label: 'Messages' },
       { icon: Box, label: 'My Orders' },
     ],
   },
   {
-    label: 'More',
+    label: '',
     items: [
       { icon: IndianRupee, label: 'Loans' },
       { icon: Truck, label: 'Ship With IM' },
