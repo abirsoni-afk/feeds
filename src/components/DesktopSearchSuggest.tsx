@@ -71,7 +71,7 @@ export default function DesktopSearchSuggest({ query, onSelect, onAskAi }: Deskt
       >
         <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-fuchsia-400" />
         <span className="text-sm text-slate-800 truncate">
-          Find the best options for {trimmed}
+          Ask AI to find the best options for {trimmed}
         </span>
       </button>
     </div>
