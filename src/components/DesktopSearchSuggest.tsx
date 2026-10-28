@@ -76,7 +76,7 @@ export default function DesktopSearchSuggest({ query, onSelect, onAskAi }: Deskt
         <span className="text-[15px] font-bold text-slate-800 truncate flex-1 min-w-0">
           Ask AI about {trimmed}
         </span>
-        <span className="ml-auto flex-shrink-0 text-[8px] font-bold uppercase tracking-wide text-fuchsia-600 bg-fuchsia-100 rounded px-1.5 py-0.5">
+        <span className="ml-auto flex-shrink-0 whitespace-nowrap text-[8px] font-bold uppercase tracking-wide text-fuchsia-600 bg-fuchsia-100 rounded px-1.5 py-0.5">
           New
         </span>
       </button>
