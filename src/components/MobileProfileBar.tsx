@@ -43,7 +43,7 @@ export default function MobileProfileBar({ persona }: MobileProfileBarProps) {
                 New
               </span>
             </span>
-            <span className="block text-xs text-fuchsia-100/90 mt-0.5 truncate">Describe your need, let AI do the searching</span>
+            <span className="block text-xs text-fuchsia-100/90 mt-0.5 truncate">Just describe what you need</span>
           </span>
           <span className="relative flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-white bg-white/15 rounded-full px-2.5 py-1.5">
             Try now
