@@ -67,14 +67,16 @@ export default function DesktopSearchSuggest({ query, onSelect, onAskAi }: Deskt
       <button
         type="button"
         onClick={() => onAskAi(trimmed)}
-        className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left bg-teal-50/40 hover:bg-teal-50 border-t border-slate-100 transition-colors"
       >
-        <Sparkles className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />
+        <span className="flex items-center justify-center w-6 h-6 rounded-md bg-teal-100 text-teal-700 flex-shrink-0">
+          <Sparkles className="w-3.5 h-3.5" />
+        </span>
         <span className="flex items-center gap-1.5 min-w-0">
-          <span className="flex-shrink-0 text-[9px] font-semibold uppercase tracking-wide text-teal-600 bg-teal-50 rounded px-1 py-0.5">
+          <span className="flex-shrink-0 text-[9px] font-bold uppercase tracking-wide text-teal-700 bg-teal-100 rounded px-1.5 py-0.5">
             Ask AI
           </span>
-          <span className="text-sm text-slate-800 truncate">{trimmed}</span>
+          <span className="text-sm font-medium text-slate-800 truncate">{trimmed}</span>
         </span>
       </button>
     </div>
