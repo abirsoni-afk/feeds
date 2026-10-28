@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import SearchModal from './SearchModal';
 import MobileSearchSuggest from './MobileSearchSuggest';
+import DesktopSearchSuggest from './DesktopSearchSuggest';
 
 interface HeaderProps {
   showSearch: boolean;
@@ -39,10 +40,14 @@ export default function Header({ onProfileClick }: HeaderProps) {
   const [showModal, setShowModal] = useState(false);
   const [aiMode, setAiMode] = useState(false);
   const [showSuggest, setShowSuggest] = useState(false);
+  const [showDesktopSuggest, setShowDesktopSuggest] = useState(false);
 
-  function handleSearch(useAi = false) {
-    if (!headerQuery.trim()) return;
+  function handleSearch(useAi = false, overrideQuery?: string) {
+    const q = overrideQuery ?? headerQuery;
+    if (!q.trim()) return;
+    if (overrideQuery !== undefined) setHeaderQuery(overrideQuery);
     setAiMode(useAi);
+    setShowDesktopSuggest(false);
     setShowModal(true);
   }
 
@@ -177,6 +182,8 @@ export default function Header({ onProfileClick }: HeaderProps) {
                   placeholder="Enter product / service to search"
                   value={headerQuery}
                   onChange={e => setHeaderQuery(e.target.value)}
+                  onFocus={() => setShowDesktopSuggest(true)}
+                  onBlur={() => setShowDesktopSuggest(false)}
                   onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
                   className="flex-1 min-w-0 h-full border-0 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
                 />
@@ -195,6 +202,14 @@ export default function Header({ onProfileClick }: HeaderProps) {
                   <Search className="w-4 h-4" />
                 </button>
                 </div>
+
+                {showDesktopSuggest && (
+                  <DesktopSearchSuggest
+                    query={headerQuery}
+                    onSelect={label => handleSearch(false, label)}
+                    onAskAi={q => handleSearch(true, q)}
+                  />
+                )}
               </div>
               <button className="hidden lg:flex px-5 bg-white hover:bg-slate-50 text-teal-700 text-sm font-semibold rounded-lg transition-all duration-150 whitespace-nowrap border border-slate-200 h-[38px] items-center flex-shrink-0">
                 Get Best Price
