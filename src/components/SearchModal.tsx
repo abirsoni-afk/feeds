@@ -392,7 +392,7 @@ const ALL_GROUP_IDS = DEFAULT_FILTER_SECTIONS.map(s => s.id);
 // by category rather than typing a precise product name.
 const RECENT_SEARCHES = ['Packaging Machine', 'LED Lights'];
 
-export default function SearchModal({ query, city, onClose }: SearchModalProps) {
+export default function SearchModal({ query, city, onClose, aiMode = false }: SearchModalProps) {
   // Editable on screen 1 — lets the buyer type a product/service name here when
   // the modal was opened with no query (e.g. from the Advanced Search action).
   const [searchQuery, setSearchQuery] = useState(query);
@@ -1033,6 +1033,19 @@ const [localOnly, setLocalOnly] = useState(false);
             <p className="hidden md:block flex-shrink-0 mx-3 mt-3 mb-1 px-0.5 text-xs font-semibold text-slate-700">
               Refine your requirement
             </p>
+
+            {/* Ask AI nudge — tells the buyer what to do next so the "Ask AI to find
+                best match" promise from the search suggestion reads as a staged
+                process (pick specs, then Find Best Match) rather than a dead end
+                once they land on the same manual refine panel as a normal search. */}
+            {aiMode && !hasActiveFilters && (
+              <div className="flex-shrink-0 mx-3 mb-2 flex items-start gap-2 rounded-lg bg-fuchsia-50/60 px-2.5 py-2">
+                <Sparkles className="w-3.5 h-3.5 text-fuchsia-500 flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] leading-snug text-fuchsia-900">
+                  Pick a few specs below, then tap <span className="font-semibold">Find Best Match</span> to get your AI picks.
+                </p>
+              </div>
+            )}
 
             <SpecFilterList
               specsLoading={specsLoading}

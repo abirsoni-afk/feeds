@@ -105,7 +105,7 @@ export default function MobileSearchSuggest({ query, onQueryChange, onClose, onS
           >
             <Sparkles className="w-4 h-4 text-teal-600 flex-shrink-0" />
             <span className="flex-1 text-left text-sm font-semibold text-teal-700">
-              Ask AI about "{trimmed}"
+              Ask AI to find best match for {trimmed}
             </span>
           </button>
         )}
