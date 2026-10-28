@@ -24,6 +24,14 @@ interface SearchModalProps {
   aiMode?: boolean;
 }
 
+// One product a seller lists under the buyer's category — the card scrolls through these.
+interface SellerProduct {
+  name: string;
+  price: string;
+  priceUnit: string;
+  image: string;
+}
+
 interface SellerCard {
   id: number;
   name: string;
@@ -44,6 +52,11 @@ interface SellerCard {
   distance: number;
   // One real signal (responsiveness / demand) backing why this seller is a strong pick
   matchHighlight?: string;
+  // All of this seller's products in the buyer's category. Omitted/empty = single product
+  // (the card falls back to image/price above).
+  products?: SellerProduct[];
+  // Buyers from the buyer's own city this seller served in the last 6 months
+  cityBuyers6m?: number;
 }
 
 interface FilterSection {
@@ -54,7 +67,7 @@ interface FilterSection {
   singleSelect?: boolean;
 }
 
-const SELLERS: SellerCard[] = [
+const BASE_SELLERS: SellerCard[] = [
   { id: 1,  name: 'Powergen India Ltd',   city: 'Delhi',     spec: '25 kVA',   price: '₹1,85,000',  priceUnit: '/unit', rating: 4.8, reviews: 214, years: 12, hasGST: true,  hasTrustSEAL: true,  hasPayProtected: true,  image: 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400', phone: '+91 98101 23456', distance: 722, matchHighlight: 'Replies within 2 hrs' },
   { id: 2,  name: 'APC Generators',       city: 'Mumbai',    spec: '62.5 kVA', price: '₹3,20,000',  priceUnit: '/unit', rating: 4.5, reviews: 98,  years: 7,  hasGST: true,  hasTrustSEAL: false, hasPayProtected: true,  image: 'https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=400', phone: '+91 70517 46251', distance: 44, matchHighlight: '18 buyers served in 6m' },
   { id: 3,  name: 'Kirloskar Power',      city: 'Pune',      spec: '125 kVA',  price: '₹5,60,000',  priceUnit: '/unit', rating: 4.9, reviews: 512, years: 20, hasGST: true,  hasTrustSEAL: true,  hasPayProtected: true,  image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=400', askPrice: true, phone: '+91 91234 56789', distance: 0, matchHighlight: '63 buyers served in 6m' },
@@ -153,6 +166,32 @@ const SELLERS: SellerCard[] = [
   { id: 96, name: 'Trident Power Systems Industries', city: 'Faridabad', spec: '500 kVA', price: '₹1,345,673', priceUnit: '/unit', rating: 3.7, reviews: 116, years: 8, hasGST: true, hasTrustSEAL: false, hasPayProtected: false, image: 'https://images.pexels.com/photos/2885320/pexels-photo-2885320.jpeg?auto=compress&cs=tinysrgb&w=400', phone: '+91 9193 11577', distance: 136, matchHighlight: 'High demand in this category' },
 ];
 
+// Demo-only multi-product + same-city data for the first few hardcoded sellers, so the
+// in-card product scroller and the "in your city" cue are visible without the live API.
+const DEMO_PRODUCT_EXTRAS: Record<number, Pick<SellerCard, 'products' | 'cityBuyers6m'>> = {
+  1: {
+    cityBuyers6m: 5,
+    products: [
+      { name: '25 kVA Silent Diesel Generator', price: '₹1,85,000', priceUnit: '/unit', image: 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { name: '15 kVA Portable Generator', price: '₹1,10,000', priceUnit: '/unit', image: 'https://images.pexels.com/photos/2885320/pexels-photo-2885320.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { name: '62.5 kVA Three Phase Generator', price: '₹3,40,000', priceUnit: '/unit', image: 'https://images.pexels.com/photos/3862632/pexels-photo-3862632.jpeg?auto=compress&cs=tinysrgb&w=400' },
+    ],
+  },
+  2: {
+    cityBuyers6m: 2,
+    products: [
+      { name: '62.5 kVA Diesel Generator', price: '₹3,20,000', priceUnit: '/unit', image: 'https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { name: '40 kVA Silent Generator', price: '₹2,45,000', priceUnit: '/unit', image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=400' },
+    ],
+  },
+  3: { cityBuyers6m: 1 },
+};
+
+const SELLERS: SellerCard[] = BASE_SELLERS.map(s => ({ ...s, ...DEMO_PRODUCT_EXTRAS[s.id] }));
+
+// Same-city buyer count is only worth a cue when at least this many buyers were served.
+const MIN_CITY_BUYERS_TO_SHOW = 1;
+
 function highlightIcon(text: string) {
   if (text.startsWith('Replies')) return Clock;
   if (text.includes('requirements')) return MapPin;
@@ -226,6 +265,25 @@ function extractBlMcat6m(s: CuratedSeller): number | null {
   return null;
 }
 
+// Same-city counterpart of extractBlMcat6m — buyers from the buyer's own city served in 6m.
+function extractCityBuyers6m(s: CuratedSeller): number | null {
+  let breakdown: unknown = s.p2_breakdown;
+  if (typeof breakdown === 'string') {
+    try {
+      breakdown = JSON.parse(breakdown);
+    } catch {
+      breakdown = null;
+    }
+  }
+  const raw =
+    (breakdown && typeof breakdown === 'object'
+      ? (breakdown as Record<string, unknown>).bl_mcat_city_6m
+      : undefined) ?? s.bl_mcat_city_6m;
+  if (typeof raw === 'number' && !Number.isNaN(raw)) return raw;
+  if (typeof raw === 'string' && raw.trim() !== '' && !Number.isNaN(Number(raw))) return Number(raw);
+  return null;
+}
+
 // Maps real curated-search results (from the windmill job/status APIs) into
 // the SellerCard shape the results grid already renders — so cards stay
 // API-powered once Find Best Match is clicked, instead of reusing the
@@ -240,6 +298,18 @@ function mapCuratedSellersToCards(list: CuratedSeller[]): SellerCard[] {
       ? s.rating_count
       : typeof s.rating_count === 'string' ? (parseInt(s.rating_count, 10) || 0) : 0;
     const yearsMatch = typeof s.memberSince === 'string' ? s.memberSince.match(/(\d+)\s*yrs?/i) : null;
+    const primaryImage = s.image || 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400';
+    // Primary product first, then any other category products the API returns (deduped by title)
+    const primaryTitle = s.title ?? s.original_title ?? '';
+    const extraProducts: SellerProduct[] = (s.products ?? [])
+      .filter(p => p.title && p.title !== primaryTitle)
+      .map(p => ({
+        name: p.title ?? '',
+        price: p.price_formatted ?? 'Ask for price',
+        priceUnit: '',
+        image: p.image || primaryImage,
+      }));
+    const cityBuyers = extractCityBuyers6m(s);
     return {
       id: idx + 1,
       name: s.companyname ?? s.title ?? s.original_title ?? 'Seller',
@@ -253,7 +323,11 @@ function mapCuratedSellersToCards(list: CuratedSeller[]): SellerCard[] {
       hasGST: !!s.gst_verified && s.gst_verified !== '0',
       hasTrustSEAL: !Number.isNaN(custTypeWt) && custTypeWt >= 199,
       hasPayProtected: !!s.trustseal,
-      image: s.image || 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400',
+      image: primaryImage,
+      products: extraProducts.length > 0
+        ? [{ name: primaryTitle, price: s.price_formatted ?? 'Ask for price', priceUnit: '', image: primaryImage }, ...extraProducts]
+        : undefined,
+      cityBuyers6m: cityBuyers ?? undefined,
       askPrice: !s.price_formatted,
       phone: undefined,
       distance: s.dist_km ?? 0,
@@ -2221,6 +2295,29 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
   const [copied, setCopied] = useState(false);
   const isAskPrice = !!seller.askPrice;
 
+  // Products the buyer can scroll through inside the card; single-product sellers fall back
+  // to the seller's own image/price.
+  const items: SellerProduct[] = seller.products && seller.products.length > 0
+    ? seller.products
+    : [{ name: seller.spec, price: seller.price, priceUnit: seller.priceUnit, image: seller.image }];
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const activeItem = items[Math.min(activeIdx, items.length - 1)];
+  const cityBuyers = seller.cityBuyers6m ?? 0;
+
+  function handleTrackScroll() {
+    const el = trackRef.current;
+    if (!el) return;
+    const i = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+    setActiveIdx(prev => (prev === i ? prev : i));
+  }
+
+  function stepProduct(e: React.MouseEvent, dir: -1 | 1) {
+    e.stopPropagation();
+    const el = trackRef.current;
+    if (el) el.scrollBy({ left: dir * el.clientWidth, behavior: 'smooth' });
+  }
+
   function advanceCta() {
     if (ctaStage !== 'idle') return;
     if (isAskPrice) onAskPrice();
@@ -2249,11 +2346,57 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
     <div className="flex flex-row md:flex-col gap-3 md:gap-0 rounded-xl border border-slate-200 bg-white overflow-hidden p-3 md:p-0">
       {/* Photo — fixed thumbnail on msite, full-width square on desktop */}
       <div className="relative w-28 h-28 md:w-full md:h-auto md:aspect-square overflow-hidden bg-slate-100 rounded-lg md:rounded-none flex-shrink-0">
-        <img
-          src={seller.image}
-          alt={seller.name}
-          className="w-full h-full object-cover"
-        />
+        <div
+          ref={trackRef}
+          onScroll={handleTrackScroll}
+          className="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+        >
+          {items.map((item, i) => (
+            <img
+              key={i}
+              src={item.image}
+              alt={item.name || seller.name}
+              className="flex-none w-full h-full snap-start object-cover"
+            />
+          ))}
+        </div>
+        {items.length > 1 && (
+          <>
+            <div className="hidden md:flex absolute top-1.5 right-1.5 items-center rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold text-white">
+              {activeIdx + 1}/{items.length}
+            </div>
+            {activeIdx > 0 && (
+              <button
+                type="button"
+                aria-label="Previous product"
+                onClick={e => stepProduct(e, -1)}
+                className="hidden md:flex absolute left-1 top-1/2 -translate-y-1/2 h-6 w-6 items-center justify-center rounded-full bg-white/95 text-slate-700 shadow-md hover:text-teal-700"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+            )}
+            {activeIdx < items.length - 1 && (
+              <button
+                type="button"
+                aria-label="Next product"
+                onClick={e => stepProduct(e, 1)}
+                className="hidden md:flex absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 items-center justify-center rounded-full bg-white/95 text-slate-700 shadow-md hover:text-teal-700"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <div className="pointer-events-none absolute bottom-1.5 inset-x-0 flex justify-center">
+              <div className="flex items-center gap-1 rounded-full bg-black/40 px-1.5 py-1">
+                {items.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 rounded-full bg-white transition-all ${i === activeIdx ? 'w-3.5' : 'w-1.5 opacity-60'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
         {ribbon && (
           <div className={`absolute top-0 left-0 px-2 py-0.5 text-[9px] font-bold text-white shadow-sm ${
             ribbonTone === 'amber' ? 'bg-gradient-to-r from-amber-500 to-amber-600'
@@ -2267,12 +2410,17 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
 
       {/* Content */}
       <div className="flex flex-col gap-1.5 flex-1 min-w-0 md:p-3">
-        {/* Product name */}
-        <p className="text-sm font-bold text-slate-900 leading-tight line-clamp-1">{seller.name}</p>
+        {/* Active product — follows the scroller above */}
+        <div className="flex flex-col items-start gap-0.5 min-w-0 w-full">
+          {activeItem.name && (
+            <p className="text-[11px] font-medium text-slate-700 leading-tight line-clamp-1 w-full">{activeItem.name}</p>
+          )}
+          <span className="text-sm font-bold text-teal-700">{activeItem.price}{activeItem.priceUnit}</span>
+        </div>
 
-        {/* Price + location */}
-        <div className="flex flex-col items-start gap-0.5">
-          <span className="text-sm font-bold text-teal-700">{seller.price}{seller.priceUnit}</span>
+        {/* Seller — stays fixed while products scroll */}
+        <div className="flex flex-col gap-0.5 border-t border-slate-100 pt-1.5">
+          <p className="text-sm font-bold text-slate-900 leading-tight line-clamp-1">{seller.name}</p>
           <span className="flex items-center gap-0.5 text-[10px] text-slate-500 truncate">
             <MapPin className="w-2.5 h-2.5 flex-shrink-0" />{seller.city}
           </span>
@@ -2304,6 +2452,16 @@ function FinalResultCard({ seller, priceRequested, onAskPrice, ribbon, ribbonTon
           <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
           <span className="text-[10px] font-semibold text-slate-800">{seller.rating}<span className="text-slate-400 font-normal">({seller.reviews})</span></span>
         </div>
+
+        {/* Same-city proof — tinted pill so buyers spot local track record at a glance */}
+        {cityBuyers >= MIN_CITY_BUYERS_TO_SHOW && (
+          <p className="inline-flex items-center gap-1.5 self-start rounded-full bg-teal-50 pl-1 pr-2 py-0.5 text-[10px] font-semibold text-teal-800">
+            <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-teal-600 text-white flex-shrink-0">
+              <MapPin className="w-2 h-2" strokeWidth={3} />
+            </span>
+            <span><span className="font-bold">{cityBuyers}</span> {cityBuyers === 1 ? 'buyer' : 'buyers'} served in your city</span>
+          </p>
+        )}
 
         {/* Why this seller — set apart from the metadata row above as a distinct reason chip */}
         {seller.matchHighlight && (() => {

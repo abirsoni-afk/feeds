@@ -57,7 +57,18 @@ export interface CuratedSeller {
   supplier_rating?: number | null;
   member_since_str?: string | null;
   pns_success_ratio?: number;
-  p2_breakdown?: { bl_mcat_6m?: number; [key: string]: unknown };
+  p2_breakdown?: { bl_mcat_6m?: number; bl_mcat_city_6m?: number; [key: string]: unknown };
+  // Other products this seller lists in the buyer's category (excluding or including the
+  // primary one) — field names are the expected shape; confirm against the windmill output.
+  products?: CuratedSellerProduct[];
+  // Buyers from the buyer's own city served in the last 6 months, if sent top-level
+  bl_mcat_city_6m?: number | string;
+}
+
+export interface CuratedSellerProduct {
+  title?: string;
+  image?: string;
+  price_formatted?: string;
 }
 
 const CREATE_JOB_URL =
