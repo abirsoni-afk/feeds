@@ -69,7 +69,7 @@ export default function DesktopSearchSuggest({ query, onSelect, onAskAi }: Deskt
         onClick={() => onAskAi(trimmed)}
         className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left bg-fuchsia-50/40 hover:bg-fuchsia-50 transition-colors"
       >
-        <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-fuchsia-400" />
+        <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-fuchsia-400 animate-[sparkle-pulse_1.6s_ease-in-out_infinite]" />
         <span className="text-sm text-slate-800 truncate">
           Ask AI about {trimmed}
         </span>
